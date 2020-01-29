@@ -2,6 +2,7 @@ import {
   LOG_FUNCTIONAL_ACTION,
   LOGOUT,
   SET_AUTH_TOKEN,
+  SET_EMAILS,
   SET_LOGIN_ERROR,
   SET_LOGIN_PASSWORD,
   SET_SIGNUP_LOGIN_VIEW,
@@ -17,6 +18,13 @@ export function logFunctionalAction (name, otherData) {
     otherData,
     actionType: 'functional',
     logData: ['name', 'otherData']
+  }
+}
+
+export function setEmails (emails) {
+  return {
+    type: SET_EMAILS,
+    emails
   }
 }
 

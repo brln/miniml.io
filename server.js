@@ -4,10 +4,13 @@ import express from 'express'
 import logger from 'morgan'
 import path from 'path'
 
-import accountRouter from './routes/account'
-import { graphqlAuth } from './auth'
-import randomShitRouter from './routes/randomShit'
+import {
+  AccountRouter,
+  EmailRouter,
+  RandomShitRouter,
+} from './routes'
 import { configGet, ENV, LOGGING_TYPE } from './config'
+import { SqsService } from "./services"
 
 
 const server = express()
@@ -30,8 +33,12 @@ server.use(bodyParser.urlencoded({
 }))
 server.use(bodyParser.json())
 
-server.use('/api/account', accountRouter)
-server.use('/api/randomShit', randomShitRouter)
+const sqsService = SqsService.factory()
+sqsService.receiveMessages()
+
+server.use('/api/account', AccountRouter)
+server.use('/api/email', EmailRouter)
+server.use('/api/randomShit', RandomShitRouter)
 
 server.get('/app', (req, res) => {
   res.sendFile(path.join(__dirname, '/app/build/index.html'))

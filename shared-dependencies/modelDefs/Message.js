@@ -1,19 +1,19 @@
 export default (baseModel, DataTypes) => {
-  class User extends baseModel {
+  class Message extends baseModel {
     static init(sequelize) {
       return super.init(this.modelDef(), {
         sequelize,
-        tableName: 'users'
+        tableName: 'messages'
       })
     }
 
     static modelDef () {
       return {
-        username: {
+        id: {
           type: DataTypes.STRING,
           primaryKey: true
         },
-        password: {
+        userID: {
           type: DataTypes.STRING,
           nullable: false,
         }
@@ -21,9 +21,8 @@ export default (baseModel, DataTypes) => {
     }
 
     static associate(models) {
-      this.messages = this.hasMany(models.Message, { foreignKey: 'userID' })
-      this.emails = this.hasMany(models.Email, { foreignKey: 'userID' })
+      this.user = this.belongsTo(models.User, { foreignKey: 'id' })
     }
   }
-  return User
+  return Message
 }

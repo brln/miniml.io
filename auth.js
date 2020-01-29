@@ -1,10 +1,9 @@
 import jwt from "jsonwebtoken"
-import { AuthenticationError } from "apollo-server-express"
+import { AuthenticationError } from './errors'
 
 import {configGet, TOP_SECRET_JWT_TOKEN} from "./config"
-import db from "./models"
 
-export function graphqlAuth({req, res}) {
+function authContext({req, res}) {
   const authHeader = req.headers.authorization
   let decoded = undefined
   if (authHeader) {
@@ -23,17 +22,15 @@ export function graphqlAuth({req, res}) {
   }
 
   return {
-    accountID: decoded.accountID,
-    db,
-    userID: decoded.userID,
+    username: decoded.username,
   }
 }
 
-export function endpointAuth(req, res, next) {
+export default function endpointAuth(req, res, next) {
   try {
-    const context = graphqlAuth({req, res})
-    res.locals.accountID = context.accountID
-    res.locals.userID = context.userID
+    const context = authContext({req, res})
+    console.log(context)
+    res.locals.username = context.username
     next()
   } catch (e) {
     console.log(e)

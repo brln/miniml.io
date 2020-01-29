@@ -8,6 +8,7 @@ import {
 import {
   logOut,
   setAuthToken,
+  setEmails,
   setLoginError,
   tokenCheckComplete,
 } from '../../actions/standard'
@@ -42,9 +43,36 @@ function doLogin () {
 
 function doLogout () {
   return (dispatch, getState) => {
-    const token = getState().getIn(['localState', 'authToken'])
     AuthStorageService.destroyToken()
     dispatch(logOut())
+  }
+}
+
+function getEmails () {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    apiClient.get('/api/email').then(emails => {
+      const byID = emails.reduce((accum, email) => {
+        accum[email.id] = email
+        return accum
+      }, {})
+      dispatch(setEmails(byID))
+    })
+  }
+}
+
+function getEmail (id) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    apiClient.get(`/api/email/${id}`).then(emails => {
+      const byID = emails.reduce((accum, email) => {
+        accum[email.id] = email
+        return accum
+      }, {})
+      dispatch(setEmails(byID))
+    })
   }
 }
 
@@ -78,6 +106,8 @@ const functional = {
   doLogin,
   doLogout,
   doSignup,
+  getEmail,
+  getEmails,
   onBoot,
   tryToFetchAuthToken,
 }

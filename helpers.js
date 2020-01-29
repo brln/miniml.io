@@ -22,3 +22,7 @@ export function makeToken (username) {
 export function randU32Sync() {
   return (crypto.randomBytes(4).readUInt32BE(0, true) - 2147483651).toString()
 }
+
+export function base64Decode (base64) {
+  return Buffer.from(base64, 'base64').toString('ascii')
+}
