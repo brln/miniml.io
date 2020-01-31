@@ -17,7 +17,9 @@ export default class EmailParser {
             replyToAddress:  parsed.replyTo.value[0].address,
             toAddress: parsed.to.value[0].address,
             subject: parsed.subject,
-            bodyHTML: parsed.html
+            bodyHTML: parsed.html,
+            read: false,
+            date: new Date(parsed.date),
           })
         }
       })

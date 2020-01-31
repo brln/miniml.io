@@ -1,6 +1,7 @@
 import { UserDoesNotExistError } from "../errors"
 import db from '../models'
 
+
 export default class EmailSaver {
   static saveEmail(data) {
     return new Promise((res, rej) => {

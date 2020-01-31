@@ -1,5 +1,7 @@
 import express from 'express'
+import faker from 'faker'
 
+import { helpers } from 'shared-dependencies'
 import db from '../models'
 import { configGet, ENV } from '../config'
 
@@ -29,6 +31,28 @@ router.get('/migrateDB', (req, res) => {
     console.log('DB Synced')
   }).then(() => {
     res.json({'all': 'done'})
+  })
+})
+
+router.get('/generateEmails', (req, resp, next) => {
+  let now = Promise.resolve()
+  for (let i=0; i<1000; i++) {
+      now = now.then(() => {
+        return db.Email.create({
+        id: helpers.getID(), fromAddress: faker.internet.email(),
+        fromName: faker.name.findName(),
+        replyToAddress:  faker.internet.email(),
+        toAddress: 'bob@miniml.io',
+        subject: faker.lorem.words(),
+        bodyHTML: faker.lorem.paragraph(),
+        read: false,
+        userID: 'bob',
+        date: new Date(faker.date.past())
+      }).catch(next)
+    })
+  }
+  now.then(() => {
+    resp.json
   })
 })
 

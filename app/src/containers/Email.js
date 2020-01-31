@@ -19,10 +19,23 @@ const MessageBox = styled.div`
 class Email extends PureComponent {
   constructor(props) {
     super(props)
+    this.toggleRead = this.toggleRead.bind(this)
+  }
+
+  toggleRead () {
+    if (!this.props.email.get('read')) {
+      this.props.dispatch(functional.toggleEmailRead(this.props.email.get('id')))
+    }
   }
 
   componentDidMount () {
-    this.props.dispatch(functional.getEmail(this.props.emailID))
+    if (!this.props.email) {
+      this.props.dispatch(functional.getEmail(this.props.emailID)).then(() => {
+        this.toggleRead()
+      })
+    } else {
+      this.toggleRead()
+    }
   }
 
   render () {
@@ -55,7 +68,6 @@ class Email extends PureComponent {
 }
 
 function mapStateToProps (state, passedProps) {
-  console.log(passedProps)
   const emailID = passedProps.match.params.id
   return {
     email: state.getIn(['localState', 'emails', emailID]),

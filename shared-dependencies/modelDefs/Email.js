@@ -32,6 +32,12 @@ export default (baseModel, DataTypes) => {
         bodyHTML: {
           type: DataTypes.TEXT,
         },
+        read: {
+          type: DataTypes.BOOLEAN
+        },
+        date: {
+          type: DataTypes.DATE
+        }
       }
     }
 

@@ -5,6 +5,7 @@ import {
   LOGOUT,
   SET_AUTH_TOKEN,
   SET_EMAILS,
+  SET_EMAIL_PAGE,
   TOKEN_CHECK_COMPLETE,
 } from '../constants/actions'
 
@@ -12,6 +13,7 @@ export const initialState = fromJS({
   actionLog: List(),
   authToken: null,
   emails: [],
+  emailPage: 0,
   tokenCheckComplete: false
 })
 
@@ -43,6 +45,8 @@ export default function LocalStateReducer(state=initialState, action) {
       return state.set('authToken', action.authToken)
     case SET_EMAILS:
       return state.set('emails', fromJS(action.emails))
+    case SET_EMAIL_PAGE:
+      return state.set('emailPage', action.page)
     case TOKEN_CHECK_COMPLETE:
       return state.set('tokenCheckComplete', true)
     default:

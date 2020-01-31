@@ -3,6 +3,7 @@ import {
   LOGOUT,
   SET_AUTH_TOKEN,
   SET_EMAILS,
+  SET_EMAIL_PAGE,
   SET_LOGIN_ERROR,
   SET_LOGIN_PASSWORD,
   SET_SIGNUP_LOGIN_VIEW,
@@ -45,6 +46,13 @@ export function setAuthToken (authToken) {
 export function logOut () {
   return {
     type: LOGOUT,
+  }
+}
+
+export function setEmailPage (page) {
+  return {
+    type: SET_EMAIL_PAGE,
+    page
   }
 }
 

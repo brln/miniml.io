@@ -1,3 +1,4 @@
+import { fromJS } from 'immutable'
 import { push } from 'connected-react-router'
 
 import {
@@ -48,11 +49,11 @@ function doLogout () {
   }
 }
 
-function getEmails () {
+function getEmails (offset) {
   return (dispatch, getState) => {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
-    apiClient.get('/api/email').then(emails => {
+    return apiClient.get(`/api/email?offset=${offset}`).then(emails => {
       const byID = emails.reduce((accum, email) => {
         accum[email.id] = email
         return accum
@@ -66,12 +67,22 @@ function getEmail (id) {
   return (dispatch, getState) => {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
-    apiClient.get(`/api/email/${id}`).then(emails => {
-      const byID = emails.reduce((accum, email) => {
-        accum[email.id] = email
-        return accum
-      }, {})
+    return apiClient.get(`/api/email/${id}`).then(email => {
+      const byID = {[email.id]: email}
       dispatch(setEmails(byID))
+    })
+  }
+}
+
+function toggleEmailRead (id) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const newValue = !getState().getIn(['localState', 'emails', id, 'read'])
+    const apiClient = new ApiClient(token)
+    apiClient.post(`/api/email/${id}`, {read: newValue}).then(email => {
+      const currentEmails = getState().getIn(['localState', 'emails'])
+      const newEmails = currentEmails.set(email.id, fromJS(email))
+      dispatch(setEmails(newEmails))
     })
   }
 }
@@ -109,6 +120,7 @@ const functional = {
   getEmail,
   getEmails,
   onBoot,
+  toggleEmailRead,
   tryToFetchAuthToken,
 }
 export default functional
