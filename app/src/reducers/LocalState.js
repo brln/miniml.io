@@ -1,8 +1,11 @@
 import { fromJS, List } from 'immutable'
 
 import {
+  CLEAR_SELECTED_EMAILS,
+  DESELECT_EMAIL,
   LOG_FUNCTIONAL_ACTION,
   LOGOUT,
+  SELECT_EMAIL,
   SET_AUTH_TOKEN,
   SET_EMAILS,
   SET_EMAIL_PAGE,
@@ -14,6 +17,7 @@ export const initialState = fromJS({
   authToken: null,
   emails: [],
   emailPage: 0,
+  selectedEmails: [],
   tokenCheckComplete: false
 })
 
@@ -39,8 +43,24 @@ function appendLog (state, action) {
 export default function LocalStateReducer(state=initialState, action) {
   state = appendLog(state, action)
   switch (action.type) {
+    case CLEAR_SELECTED_EMAILS:
+      return state.set('selectedEmails', List())
+    case DESELECT_EMAIL:
+      let newDeselected = state.get('selectedEmails')
+      for (let id of action.ids) {
+        const index = state.get('selectedEmails').indexOf(id)
+        newDeselected = newDeselected.splice(index, 1)
+      }
+      return state.set('selectedEmails', newDeselected)
     case LOGOUT:
       return initialState.set('tokenCheckComplete', true)
+    case SELECT_EMAIL:
+      let newSelected = state.get('selectedEmails')
+      for (let id of action.ids) {
+        newSelected = newSelected.push(id)
+      }
+      console.log(newSelected.toJSON())
+      return state.set('selectedEmails', newSelected)
     case SET_AUTH_TOKEN:
       return state.set('authToken', action.authToken)
     case SET_EMAILS:

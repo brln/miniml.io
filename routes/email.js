@@ -6,10 +6,19 @@ const router = express.Router()
 
 router.get('/', endpointAuth, (req, res, next) => {
   const username = res.locals.username
-  console.log(req.query.offset)
   const offset = parseInt(req.query.offset) || 0
   db.Email.findAll({where: {userID: username}, offset, limit: 50, order: [['date', 'DESC']]}).then(emails => {
     res.json(emails)
+  }).catch(next)
+})
+
+router.post('/', endpointAuth, (req, res, next) => {
+  const username = res.locals.username
+  const where = {where: {userID: username, id: req.body.ids}}
+  db.Email.update(req.body.updates, where).then(resp => {
+    return db.Email.findAll(where)
+  }).then(email => {
+    res.json(email)
   }).catch(next)
 })
 

@@ -1,6 +1,9 @@
 import {
+  CLEAR_SELECTED_EMAILS,
+  DESELECT_EMAIL,
   LOG_FUNCTIONAL_ACTION,
   LOGOUT,
+  SELECT_EMAIL,
   SET_AUTH_TOKEN,
   SET_EMAILS,
   SET_EMAIL_PAGE,
@@ -19,6 +22,26 @@ export function logFunctionalAction (name, otherData) {
     otherData,
     actionType: 'functional',
     logData: ['name', 'otherData']
+  }
+}
+
+export function clearSelectedEmails () {
+  return {
+    type: CLEAR_SELECTED_EMAILS
+  }
+}
+
+export function deselectEmails (ids) {
+  return {
+    type: DESELECT_EMAIL,
+    ids,
+  }
+}
+
+export function selectEmails (ids) {
+  return {
+    type: SELECT_EMAIL,
+    ids
   }
 }
 

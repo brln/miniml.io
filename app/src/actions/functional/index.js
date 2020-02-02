@@ -87,6 +87,25 @@ function toggleEmailRead (id) {
   }
 }
 
+function bulkUpdateSelectedEmails (newValues) {
+  return (dispatch, getState) => {
+    const emailIDs = getState().getIn(['localState', 'selectedEmails'])
+    if (emailIDs.count() > 0) {
+      const token = getState().getIn(['localState', 'authToken'])
+      const apiClient = new ApiClient(token)
+      return apiClient.post(`/api/email`, {ids: emailIDs, updates: newValues}).then(emails => {
+        let currentEmails = getState().getIn(['localState', 'emails'])
+        for (let email of emails) {
+          currentEmails = currentEmails.set(email.id, fromJS(email))
+        }
+        dispatch(setEmails(currentEmails))
+      })
+    } else {
+      return Promise.resolve()
+    }
+  }
+}
+
 function onAuthTokenReceipt (authToken) {
   return (dispatch) => {
     dispatch(setAuthToken(authToken))
@@ -114,6 +133,7 @@ function tryToFetchAuthToken () {
 // This method of exporting allows us to mock individual functional actions
 // while testing some other functional action from this same module.
 const functional = {
+  bulkUpdateSelectedEmails,
   doLogin,
   doLogout,
   doSignup,

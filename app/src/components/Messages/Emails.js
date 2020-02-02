@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 
@@ -14,6 +14,7 @@ const PaginatorButton = styled.div`
   align-items: center;
   padding: 0.3em;
   color: ${p => p.emailPage === 0 ? 'grey' : 'black'};
+  cursor: ${p => p.emailPage === 0 ? '' : 'pointer'};
 `
 
 const Header = styled.div`
@@ -22,7 +23,23 @@ const Header = styled.div`
   justify-content: space-between;
 `
 
+const ButtonRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const Button = styled.div`
+  border: 1px solid black;
+  margin: 0.2em;
+  padding: 0.4em;
+  cursor: pointer;
+`
+
 export default class Emails extends React.Component {
+  constructor (props) {
+    super(props)
+  }
+
   render () {
     return (
       <>
@@ -34,14 +51,20 @@ export default class Emails extends React.Component {
           </Paginator>
         </Header>
 
-        @TODO: fix checkmarks to do actions instead of just marking read
+        <ButtonRow>
+          <Button><input type="checkbox" onClick={this.props.toggleSelectAll} checked={this.props.selectAllEmailsChecked}/></Button>
+          <Button onClick={this.props.markRead}>Mark Read</Button>
+          <Button onClick={this.props.markUnread}>Mark Unread</Button>
+          <Button>Delete</Button>
+        </ButtonRow>
 
         {
           this.props.emails.map(email => {
             return (
               <EmailRow
                 email={email}
-                toggleEmailRead={this.props.toggleEmailRead}
+                selectEmail={this.props.selectEmail}
+                selectedEmails={this.props.selectedEmails}
               />
             )
           })

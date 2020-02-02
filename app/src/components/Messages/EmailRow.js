@@ -62,8 +62,8 @@ export default class EmailRow extends React.Component {
         <MarkReadBox>
           <input
             type="checkbox"
-            onChange={this.props.toggleEmailRead(this.props.email.get('id'))}
-            checked={this.props.email.get('read')}
+            onChange={this.props.selectEmail(this.props.email.get('id'))}
+            checked={this.props.selectedEmails.includes(this.props.email.get('id'))}
           />
         </MarkReadBox>
         <HeaderInfo>
