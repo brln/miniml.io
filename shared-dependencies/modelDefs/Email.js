@@ -37,6 +37,9 @@ export default (baseModel, DataTypes) => {
         },
         date: {
           type: DataTypes.DATE
+        },
+        archived: {
+          type: DataTypes.BOOLEAN
         }
       }
     }

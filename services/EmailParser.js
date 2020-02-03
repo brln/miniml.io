@@ -20,6 +20,7 @@ export default class EmailParser {
             bodyHTML: parsed.html,
             read: false,
             date: new Date(parsed.date),
+            archived: false,
           })
         }
       })

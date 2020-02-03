@@ -55,7 +55,7 @@ export default class Emails extends React.Component {
           <Button><input type="checkbox" onClick={this.props.toggleSelectAll} checked={this.props.selectAllEmailsChecked}/></Button>
           <Button onClick={this.props.markRead}>Mark Read</Button>
           <Button onClick={this.props.markUnread}>Mark Unread</Button>
-          <Button>Delete</Button>
+          <Button onClick={this.props.markArchived}>Archive</Button>
         </ButtonRow>
 
         {

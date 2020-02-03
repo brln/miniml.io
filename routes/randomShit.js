@@ -47,7 +47,8 @@ router.get('/generateEmails', (req, resp, next) => {
         bodyHTML: faker.lorem.paragraph(),
         read: false,
         userID: 'bob',
-        date: new Date(faker.date.past())
+        date: new Date(faker.date.past()),
+        archived: false
       }).catch(next)
     })
   }

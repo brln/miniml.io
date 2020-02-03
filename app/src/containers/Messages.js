@@ -26,6 +26,7 @@ class Messages extends PureComponent {
       selectAllEmailsChecked: false
     }
     this.deselectAllEmails = this.deselectAllEmails.bind(this)
+    this.markArchived = this.markArchived.bind(this)
     this.markRead = this.markRead.bind(this)
     this.markUnread = this.markUnread.bind(this)
     this.nextPage = this.nextPage.bind(this)
@@ -59,6 +60,15 @@ class Messages extends PureComponent {
 
   markRead () {
     this.props.dispatch(functional.bulkUpdateSelectedEmails({read: true})).then(() => {
+      this.props.dispatch(clearSelectedEmails())
+      this.setState({
+        selectAllEmailsChecked: false
+      })
+    })
+  }
+
+  markArchived () {
+    this.props.dispatch(functional.bulkUpdateSelectedEmails({archived: true}, this.props.emailPage)).then(() => {
       this.props.dispatch(clearSelectedEmails())
       this.setState({
         selectAllEmailsChecked: false
@@ -122,6 +132,7 @@ class Messages extends PureComponent {
         <Emails
           emails={sortedEmails}
           emailPage={this.props.emailPage}
+          markArchived={this.markArchived}
           markRead={this.markRead}
           markUnread={this.markUnread}
           nextPage={this.nextPage}

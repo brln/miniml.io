@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import {connect} from "react-redux"
 import {
   Switch,
+  Redirect,
   Route,
 } from "react-router"
 import { Link } from 'react-router-dom'
@@ -9,7 +10,29 @@ import { Link } from 'react-router-dom'
 import functional from '../actions/functional'
 import LogoutButton from '../components/Main/LogoutButton'
 import Messages from './Messages'
+import Settings from './Settings'
 import Email from './Email'
+import styled from "styled-components"
+import AccountButton from "../components/Main/AccountButton"
+
+const Header = styled.div`
+  border: 1px solid black;
+  background: black;
+  height: 3em;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding-left: 1em;
+  justify-content: space-between;
+`
+
+const Logo = styled.div``
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: white;
+`
+
 
 class Main extends PureComponent {
   constructor(props) {
@@ -24,18 +47,16 @@ class Main extends PureComponent {
   render () {
     return (
       <div>
-        <LogoutButton logout={this.logout} />
-
+        <Header>
+          <Logo><StyledLink to={"/messages"}>miniml.io</StyledLink></Logo>
+          <AccountButton logout={this.logout}/>
+        </Header>
         <Switch>
           <Route path="/messages/email/:id" component={Email} />
           <Route path="/messages" component={Messages} />
-          <Route>
-            <div>
-              <Link to="/messages">
-                <h1>Messages</h1>
-              </Link>
-            </div>
-          </Route>
+          <Route path="/settings" component={Settings} />
+
+          <Redirect to="/messages" />
         </Switch>
       </div>
     )

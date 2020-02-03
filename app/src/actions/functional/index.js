@@ -87,18 +87,18 @@ function toggleEmailRead (id) {
   }
 }
 
-function bulkUpdateSelectedEmails (newValues) {
+function bulkUpdateSelectedEmails (newValues, offset=0) {
   return (dispatch, getState) => {
     const emailIDs = getState().getIn(['localState', 'selectedEmails'])
     if (emailIDs.count() > 0) {
       const token = getState().getIn(['localState', 'authToken'])
       const apiClient = new ApiClient(token)
-      return apiClient.post(`/api/email`, {ids: emailIDs, updates: newValues}).then(emails => {
-        let currentEmails = getState().getIn(['localState', 'emails'])
-        for (let email of emails) {
-          currentEmails = currentEmails.set(email.id, fromJS(email))
-        }
-        dispatch(setEmails(currentEmails))
+      return apiClient.post(`/api/email`, {ids: emailIDs, updates: newValues, offset}).then(emails => {
+        const byID = emails.reduce((accum, email) => {
+          accum[email.id] = email
+          return accum
+        }, {})
+        dispatch(setEmails(byID))
       })
     } else {
       return Promise.resolve()

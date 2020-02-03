@@ -76,8 +76,8 @@ export default class Login extends PureComponent {
         <MainBox>
           <h2>Sign Up</h2>
           <div style={{paddingTop: "10px"}}>
-            <Title htmlFor="emailInput">Username</Title>
-            <SignupInput id="emailInput" type={"text"} autoFocus={true} onChange={this.props.changeUsername} value={this.props.username}/>
+            <Title>Username</Title>
+            <SignupInput type={"text"} autoFocus={true} onChange={this.props.changeUsername} value={this.props.username}/>
           </div>
 
           <div style={{paddingTop: "10px"}}>
