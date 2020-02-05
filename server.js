@@ -8,6 +8,7 @@ import {
   AccountRouter,
   EmailRouter,
   RandomShitRouter,
+  RssRouter,
 } from './routes'
 import { configGet, ENV, LOGGING_TYPE } from './config'
 import { SqsService } from "./services"
@@ -38,6 +39,7 @@ sqsService.receiveMessages()
 
 server.use('/api/account', AccountRouter)
 server.use('/api/email', EmailRouter)
+server.use('/api/rss', RssRouter)
 server.use('/api/randomShit', RandomShitRouter)
 
 server.get('/app', (req, res) => {

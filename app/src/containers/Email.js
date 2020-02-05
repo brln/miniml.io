@@ -2,15 +2,7 @@ import React, { PureComponent } from 'react'
 import {connect} from "react-redux"
 import styled from "styled-components"
 import functional from '../actions/functional'
-
-const MainBox = styled.div`
-  top: 1em;
-  left: 1em;
-  background: #FFFFFF;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-`
+import { MainBox } from '../components/Shared/MainBox'
 
 const MessageBox = styled.div`
   border: 1px solid black;

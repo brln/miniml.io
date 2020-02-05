@@ -11,7 +11,6 @@ export default class EmailSaver {
           rej(new UserDoesNotExistError())
         } else {
           data.userID = username
-          console.log(data)
           db.Email.create(data).then(resp => {
             res(resp)
           }).catch(e => {

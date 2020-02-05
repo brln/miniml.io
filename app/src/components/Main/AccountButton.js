@@ -44,8 +44,15 @@ export default class AccountButton extends PureComponent {
     this.state = {
       menuOpen: false
     }
+    this.closeMenu = this.closeMenu.bind(this)
     this.menuOpen = this.menuOpen.bind(this)
     this.handleClickOutside = this.handleClickOutside.bind(this)
+  }
+
+  closeMenu () {
+    this.setState({
+      menuOpen: false
+    })
   }
 
   componentDidMount() {
@@ -66,15 +73,15 @@ export default class AccountButton extends PureComponent {
 
   menuOpen () {
     this.setState({
-      menuOpen: true
+      menuOpen: !this.state.menuOpen
     })
   }
 
   render () {
     return (
       <Dropdown onClick={this.menuOpen} ref={x => this.wrapperRef = x}>
-        <Button>Account</Button>
-        {this.state.menuOpen ? <DropdownContent>
+        <Button className="disable-select">Account</Button>
+        {this.state.menuOpen ? <DropdownContent onClick={this.closeMenu}>
           <DropdownItem>
             <StyledLink to={'/settings'}>Settings</StyledLink>
           </DropdownItem>

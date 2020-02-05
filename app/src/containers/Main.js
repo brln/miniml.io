@@ -8,7 +8,6 @@ import {
 import { Link } from 'react-router-dom'
 
 import functional from '../actions/functional'
-import LogoutButton from '../components/Main/LogoutButton'
 import Messages from './Messages'
 import Settings from './Settings'
 import Email from './Email'

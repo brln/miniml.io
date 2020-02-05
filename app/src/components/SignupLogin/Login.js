@@ -86,7 +86,13 @@ export default class Login extends PureComponent {
 
           <div style={{paddingTop: "10px"}}>
             <Title htmlFor="passwordInput">password</Title>
-            <EmailInput id="passwordInput" type={"password"} onChange={this.props.changePassword} value={this.props.password}/>
+            <EmailInput
+              onKeyUp={this.props.checkForSubmit('login')}
+              id="passwordInput"
+              type={"password"}
+              onChange={this.props.changePassword}
+              value={this.props.password}
+            />
           </div>
           <SubmitButton onClick={this.props.doLogin}>Submit</SubmitButton>
           <SignupLink onClick={this.props.setView(SIGNUP_VIEW)}>Or, Sign Up</SignupLink>

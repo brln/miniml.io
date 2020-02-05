@@ -1,13 +1,26 @@
 import express from 'express'
 import endpointAuth from '../auth'
 import db from '../models'
+import { Op } from 'sequelize'
+import { helpers } from 'shared-dependencies'
 
 const router = express.Router()
 
+
 router.get('/', endpointAuth, (req, res, next) => {
   const username = res.locals.username
-  const offset = parseInt(req.query.offset) || 0
-  db.Email.findAll({where: {userID: username, archived: false}, offset, limit: 50, order: [['date', 'DESC']]}).then(emails => {
+  const date = helpers.between('12:23', parseInt(req.query.offset) || 0)
+
+  db.Email.findAll({
+    where: {
+      userID: username,
+      archived: false,
+      date: {
+        [Op.between]: [date.yesterday, date.today]
+      }
+    },
+    order: [['date', 'DESC']]
+  }).then(emails => {
     res.json(emails)
   }).catch(next)
 })

@@ -1,23 +1,15 @@
 import React, { PureComponent } from 'react'
 import {connect} from "react-redux"
 import functional from '../actions/functional'
-import Emails from '../components/Messages/Emails'
-import styled from "styled-components"
-import {clearSelectedEmails, deselectEmails, selectEmails, setEmailPage} from '../actions/standard'
+import MessageListing from '../components/Messages/MessageListing'
 
-
-
-
-const MainBox = styled.div`
-  top: 1em;
-  left: 1em;
-  background: #FFFFFF;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-`
-
-const EMAILS_PER_PAGE = 50
+import {
+  clearSelectedEmails,
+  deselectEmails,
+  selectEmails,
+  setEmailPage
+} from '../actions/standard'
+import { MainBox } from '../components/Shared/MainBox'
 
 class Messages extends PureComponent {
   constructor(props) {
@@ -37,7 +29,8 @@ class Messages extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.dispatch(functional.getEmails(0))
+    this.props.dispatch(functional.getEmails(this.props.emailPage))
+    this.props.dispatch(functional.getArticles(this.props.emailPage))
   }
 
   selectEmail(id) {
@@ -59,7 +52,7 @@ class Messages extends PureComponent {
   }
 
   markRead () {
-    this.props.dispatch(functional.bulkUpdateSelectedEmails({read: true})).then(() => {
+    this.props.dispatch(functional.bulkUpdateSelectedEmails({read: true}, this.props.emailPage)).then(() => {
       this.props.dispatch(clearSelectedEmails())
       this.setState({
         selectAllEmailsChecked: false
@@ -77,7 +70,7 @@ class Messages extends PureComponent {
   }
 
   markUnread () {
-    this.props.dispatch(functional.bulkUpdateSelectedEmails({read: false})).then(() => {
+    this.props.dispatch(functional.bulkUpdateSelectedEmails({read: false}, this.props.emailPage)).then(() => {
       this.props.dispatch(clearSelectedEmails())
       this.setState({
         selectAllEmailsChecked: false
@@ -86,8 +79,10 @@ class Messages extends PureComponent {
   }
 
   nextPage () {
-    const nextPage = this.props.emailPage + EMAILS_PER_PAGE
+    const nextPage = this.props.emailPage + 1
     this.props.dispatch(functional.getEmails(nextPage)).then(() => {
+      return this.props.dispatch(functional.getArticles(nextPage))
+    }).then(() => {
       this.setState({
         selectAllEmailsChecked: false
       })
@@ -98,8 +93,10 @@ class Messages extends PureComponent {
 
   previousPage () {
     if (this.props.emailPage > 0) {
-      const nextPage = this.props.emailPage - EMAILS_PER_PAGE
+      const nextPage = this.props.emailPage - 1
       this.props.dispatch(functional.getEmails(nextPage)).then(() => {
+        return this.props.dispatch(functional.getArticles(nextPage))
+      }).then(() => {
         this.setState({
           selectAllEmailsChecked: false
         })
@@ -124,13 +121,11 @@ class Messages extends PureComponent {
   }
 
   render () {
-    const sortedEmails = this.props.emails.valueSeq().sort((a, b) => {
-      return new Date(b.get('date')) - new Date(a.get('date'))
-    })
     return (
       <MainBox>
-        <Emails
-          emails={sortedEmails}
+        <MessageListing
+          articles={this.props.articles}
+          emails={this.props.emails}
           emailPage={this.props.emailPage}
           markArchived={this.markArchived}
           markRead={this.markRead}
@@ -150,6 +145,7 @@ class Messages extends PureComponent {
 
 function mapStateToProps (state) {
   return {
+    articles: state.getIn(['localState', 'articles']),
     emails: state.getIn(['localState', 'emails']),
     emailPage: state.getIn(['localState', 'emailPage']),
     selectedEmails: state.getIn(['localState', 'selectedEmails'])

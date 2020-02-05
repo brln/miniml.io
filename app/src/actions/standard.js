@@ -1,18 +1,21 @@
 import {
+  ADD_RSS_FEED,
   CLEAR_SELECTED_EMAILS,
   DESELECT_EMAIL,
   LOG_FUNCTIONAL_ACTION,
   LOGOUT,
   SELECT_EMAIL,
   SET_AUTH_TOKEN,
+  SET_ARTICLES,
   SET_EMAILS,
   SET_EMAIL_PAGE,
   SET_LOGIN_ERROR,
   SET_LOGIN_PASSWORD,
+  SET_RSS_FEEDS,
   SET_SIGNUP_LOGIN_VIEW,
   SET_SIGNUP_PASSWORD,
   SET_USERNAME,
-  TOKEN_CHECK_COMPLETE,
+  TOKEN_CHECK_COMPLETE, SET_RSS_FEED_ADD_ERROR,
 } from '../constants/actions'
 
 export function logFunctionalAction (name, otherData) {
@@ -22,6 +25,13 @@ export function logFunctionalAction (name, otherData) {
     otherData,
     actionType: 'functional',
     logData: ['name', 'otherData']
+  }
+}
+
+export function addRssFeed (data) {
+  return {
+    type: ADD_RSS_FEED,
+    data
   }
 }
 
@@ -45,10 +55,24 @@ export function selectEmails (ids) {
   }
 }
 
+export function setArticles (articles) {
+  return {
+    type: SET_ARTICLES,
+    articles,
+  }
+}
+
 export function setEmails (emails) {
   return {
     type: SET_EMAILS,
     emails
+  }
+}
+
+export function setRssFeeds (rssFeeds) {
+  return {
+    type: SET_RSS_FEEDS,
+    rssFeeds
   }
 }
 
@@ -92,6 +116,14 @@ export function setLoginPassword (loginPassword) {
     loginPassword,
   }
 }
+
+export function setRssFeedAddError (error) {
+  return {
+    type: SET_RSS_FEED_ADD_ERROR,
+    error
+  }
+}
+
 export function setSignupLoginView (newView) {
   return {
     type: SET_SIGNUP_LOGIN_VIEW,

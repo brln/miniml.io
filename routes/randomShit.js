@@ -21,6 +21,7 @@ router.get('/', (req, res) => {
   res.send(`
     <h1>Random Shit</h1><br/>
     <a href="/api/randomShit/migrateDB">Migrate DB</a><br/>
+    <a href="/api/randomShit/generateEmails">Generate Emails</a><br/>
   `)
 })
 
@@ -47,7 +48,7 @@ router.get('/generateEmails', (req, resp, next) => {
         bodyHTML: faker.lorem.paragraph(),
         read: false,
         userID: 'bob',
-        date: new Date(faker.date.past()),
+        date: new Date(faker.date.recent(30)),
         archived: false
       }).catch(next)
     })

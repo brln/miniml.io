@@ -21,6 +21,7 @@ class SignupLoginContainer extends PureComponent  {
     this.changeUsername = this.changeUsername.bind(this)
     this.changePassword = this.changePassword.bind(this)
     this.changeSignupPassword = this.changeSignupPassword.bind(this)
+    this.checkForSubmit = this.checkForSubmit.bind(this)
     this.doLogin = this.doLogin.bind(this)
     this.doSignup = this.doSignup.bind(this)
     this.setView = this.setView.bind(this)
@@ -32,6 +33,7 @@ class SignupLoginContainer extends PureComponent  {
   }
 
   changePassword (e) {
+    console.log(e)
     this.props.dispatch(setLoginPassword(e.target.value))
   }
 
@@ -44,6 +46,16 @@ class SignupLoginContainer extends PureComponent  {
   setView (newView) {
     return () => {
       this.props.dispatch(setSignupLoginView(newView))
+    }
+  }
+
+  checkForSubmit (type) {
+    return (e) => {
+      if (e.keyCode === 13 && type === 'login') {
+        this.doLogin()
+      } else if (e.keyCode == 13 && type === 'signup') {
+        this.doSignup()
+      }
     }
   }
 
@@ -71,6 +83,7 @@ class SignupLoginContainer extends PureComponent  {
         <Login
           changeUsername={this.changeUsername}
           changePassword={this.changePassword}
+          checkForSubmit={this.checkForSubmit}
           doLogin={this.doLogin}
           error={this.props.error}
           password={this.props.password}
@@ -85,6 +98,7 @@ class SignupLoginContainer extends PureComponent  {
           changeUsername={this.changeUsername}
           changeEmail={this.changeEmail}
           changeSignupPassword={this.changeSignupPassword}
+          checkForSubmit={this.checkForSubmit}
           doSignup={this.doSignup}
           error={this.props.error}
           password1={this.props.password1}

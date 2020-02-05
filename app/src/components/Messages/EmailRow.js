@@ -1,50 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import moment from 'moment'
+import { FaEnvelope } from 'react-icons/fa'
 
-import styled from 'styled-components'
-
-
-const HeaderInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  flex: 1;
-`
-
-const Row = styled.div`
-  display: flex;
-  border: 1px solid black;
-  padding: 0.5em;
-  margin: 0.2em;
-`
-
-const MarkReadBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 0.5em;
-  justify-content: center;
-`
-
-const Subject = styled.div`
-  font-size: 130%;
-  color: ${p => p.read ? 'grey' : 'black'};
-`
-
-const From = styled.div`
-  font-size: 130%;
-  color: ${p => p.read ? 'grey' : 'black'};
-`
-
-const PrettyLink = styled(Link)`
-  text-decoration: none;
-`
-
-const DateBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`
+import {
+  MarkReadBox,
+  HeaderInfo,
+  IconBox,
+  Row,
+  PrettyLink,
+  Subject,
+  From,
+  DateBox,
+} from './StyledComponents'
 
 export default class EmailRow extends React.Component {
   constructor(props) {
@@ -66,6 +33,9 @@ export default class EmailRow extends React.Component {
             checked={this.props.selectedEmails.includes(this.props.email.get('id'))}
           />
         </MarkReadBox>
+        <IconBox>
+          <FaEnvelope />
+        </IconBox>
         <HeaderInfo>
           <PrettyLink
             to={`/messages/email/${this.props.email.get('id')}`}

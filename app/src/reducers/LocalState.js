@@ -1,22 +1,29 @@
 import { fromJS, List } from 'immutable'
 
 import {
+  ADD_RSS_FEED,
   CLEAR_SELECTED_EMAILS,
   DESELECT_EMAIL,
   LOG_FUNCTIONAL_ACTION,
   LOGOUT,
   SELECT_EMAIL,
+  SET_ARTICLES,
   SET_AUTH_TOKEN,
   SET_EMAILS,
   SET_EMAIL_PAGE,
+  SET_RSS_FEEDS,
+  SET_RSS_FEED_ADD_ERROR,
   TOKEN_CHECK_COMPLETE,
 } from '../constants/actions'
 
 export const initialState = fromJS({
   actionLog: List(),
+  articles: {},
   authToken: null,
-  emails: [],
+  emails: {},
   emailPage: 0,
+  rssFeeds: {},
+  rssFeedAddError: null,
   selectedEmails: [],
   tokenCheckComplete: false
 })
@@ -43,6 +50,8 @@ function appendLog (state, action) {
 export default function LocalStateReducer(state=initialState, action) {
   state = appendLog(state, action)
   switch (action.type) {
+    case ADD_RSS_FEED:
+      return state.setIn(['rssFeeds', action.data.id], fromJS(action.data))
     case CLEAR_SELECTED_EMAILS:
       return state.set('selectedEmails', List())
     case DESELECT_EMAIL:
@@ -63,10 +72,16 @@ export default function LocalStateReducer(state=initialState, action) {
       return state.set('selectedEmails', newSelected)
     case SET_AUTH_TOKEN:
       return state.set('authToken', action.authToken)
+    case SET_ARTICLES:
+      return state.set('articles', fromJS(action.articles))
     case SET_EMAILS:
       return state.set('emails', fromJS(action.emails))
     case SET_EMAIL_PAGE:
       return state.set('emailPage', action.page)
+    case SET_RSS_FEEDS:
+      return state.set('rssFeeds', fromJS(action.rssFeeds))
+    case SET_RSS_FEED_ADD_ERROR:
+      return state.set('rssFeedAddError', action.error)
     case TOKEN_CHECK_COMPLETE:
       return state.set('tokenCheckComplete', true)
     default:

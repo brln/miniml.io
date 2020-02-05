@@ -7,12 +7,30 @@ import {
 } from '../../services/'
 
 import {
+  addRssFeed,
   logOut,
   setAuthToken,
+  setArticles,
   setEmails,
   setLoginError,
+  setRssFeeds,
+  setRssFeedAddError,
   tokenCheckComplete,
 } from '../../actions/standard'
+
+function getArticles (offset) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    apiClient.get(`/api/rss/articles?offset=${offset}`).then(articles => {
+      const byID = articles.reduce((accum, article) => {
+        accum[article.id] = article
+        return accum
+      }, {})
+      dispatch(setArticles(byID))
+    })
+  }
+}
 
 function doSignup () {
   return (dispatch, getState) => {
@@ -74,6 +92,20 @@ function getEmail (id) {
   }
 }
 
+function getRssFeeds () {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    return apiClient.get(`/api/rss/feeds`).then(rssFeeds => {
+      const byID = rssFeeds.reduce((accum, feed) => {
+        accum[feed.id] = feed
+        return accum
+      }, {})
+      dispatch(setRssFeeds(byID))
+    })
+  }
+}
+
 function toggleEmailRead (id) {
   return (dispatch, getState) => {
     const token = getState().getIn(['localState', 'authToken'])
@@ -120,6 +152,18 @@ function onBoot () {
   }
 }
 
+function submitRssFeed (url) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    return apiClient.post(`/api/rss/feeds`, {url}).then(feed => {
+      dispatch(addRssFeed(feed))
+    }).catch(e => {
+      dispatch(setRssFeedAddError(e.message))
+    })
+  }
+}
+
 function tryToFetchAuthToken () {
   return (dispatch) => {
     const token = AuthStorageService.getToken()
@@ -137,9 +181,12 @@ const functional = {
   doLogin,
   doLogout,
   doSignup,
+  getArticles,
   getEmail,
   getEmails,
+  getRssFeeds,
   onBoot,
+  submitRssFeed,
   toggleEmailRead,
   tryToFetchAuthToken,
 }
