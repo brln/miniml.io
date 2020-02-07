@@ -1,24 +1,12 @@
 'use strict'
 
 import { modelDefs } from 'shared-dependencies'
-import {
-  configGet,
-  DB_DATABASE,
-  DB_PASSWORD,
-  DB_USERNAME,
-  DB_HOST,
-  DB_DIALECT,
-} from "../config"
+import configVals from '../config/config.js'
 
 import Sequelize from 'sequelize'
 
-const config = {
-  "username": configGet(DB_USERNAME),
-  "password": configGet(DB_PASSWORD),
-  "database": configGet(DB_DATABASE),
-  "host": configGet(DB_HOST),
-  "dialect": configGet(DB_DIALECT),
-}
+const env = process.env.NODE_ENV || 'development'
+const config = configVals[env]
 
 const db = {}
 

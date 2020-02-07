@@ -30,7 +30,6 @@ class RssArticle extends PureComponent {
 
   render () {
     if (this.props.article) {
-      console.log(this.props.article.toJS())
       return (
         <MainBox>
           <h2>{ this.props.article.get('title') }</h2>

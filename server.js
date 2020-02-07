@@ -17,10 +17,6 @@ RssUpdater.startCron(RssUpdater.rssFullUpdate)
 
 const server = express()
 
-server.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/app/build/index.html'))
-})
-
 server.use(express.static('views'))
 server.use('/app/static', express.static('app/build/static'))
 
@@ -51,7 +47,7 @@ server.use('*.php', (req, res) => {
 
 // catch 404 and forward to error handler
 server.use(function(req, res, next) {
-  res.status(404).send("<h1>Not Found</h1>")
+  res.sendFile(path.join(__dirname, '/app/build/index.html'))
 })
 
 // error handler

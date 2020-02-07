@@ -50,7 +50,6 @@ export default class SqsService {
     }
 
     const pollQueue = () => {
-      console.log('polling')
       this.sqs.receiveMessage(params, (err, data) => {
         if (err) {
           console.log(err, err.stack)

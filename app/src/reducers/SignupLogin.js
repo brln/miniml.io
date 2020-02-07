@@ -22,7 +22,6 @@ export const initialState = fromJS({
 })
 
 export default function SignupLoginReducer(state=initialState, action) {
-  console.log(action)
   switch (action.type) {
     case LOGOUT:
       return initialState

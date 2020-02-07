@@ -35,7 +35,6 @@ router.post('/login', (req, res, next) => {
   const password = req.body.password
 
   db.User.findByPk(username).then(userData => {
-    console.log(userData)
     if (!userData) {
       return res.status(401).json({'error': 'Wrong username/password'})
     }

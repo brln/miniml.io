@@ -93,7 +93,6 @@ router.post('/articles', endpointAuth, (req, res, next) => {
   const username = res.locals.username
   const where = {where: {userID: username, rssArticleID: req.body.ids}}
   db.RssArticleUser.findAll(where).then(found => {
-    console.log('found', found)
     const foundIDs = found.map(rau => rau.id)
     let findOrCreate = Promise.resolve()
     if (foundIDs.length > 0) {
