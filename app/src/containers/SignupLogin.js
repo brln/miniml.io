@@ -120,8 +120,8 @@ function mapStateToProps (state) {
     username: signupLoginState.get('username'),
     error: signupLoginState.get('error'),
     password: signupLoginState.get('loginPassword'),
-    password1: signupLoginState.getIn(['signupPassword', 1]),
-    password2: signupLoginState.getIn(['signupPassword', 2]),
+    password1: signupLoginState.getIn(['signupPassword', '1']),
+    password2: signupLoginState.getIn(['signupPassword', '2']),
   }
 }
 

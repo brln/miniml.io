@@ -18,7 +18,7 @@ RssUpdater.startCron(RssUpdater.rssFullUpdate)
 const server = express()
 
 server.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/views/index.html'))
+  res.sendFile(path.join(__dirname, '/app/build/index.html'))
 })
 
 server.use(express.static('views'))
@@ -42,10 +42,6 @@ server.use('/api/account', AccountRouter)
 server.use('/api/email', EmailRouter)
 server.use('/api/rss', RssRouter)
 server.use('/api/randomShit', RandomShitRouter)
-
-server.get('/app', (req, res) => {
-  res.sendFile(path.join(__dirname, '/app/build/index.html'))
-})
 
 server.use('*.php', (req, res) => {
   setTimeout(() => {

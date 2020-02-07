@@ -1,4 +1,4 @@
-import { Map } from 'immutable'
+import { fromJS } from 'immutable'
 
 import {
   LOGIN_VIEW,
@@ -10,7 +10,7 @@ import {
   SET_SIGNUP_PASSWORD,
 } from '../constants/actions'
 
-export const initialState = Map({
+export const initialState = fromJS({
   currentView: LOGIN_VIEW,
   username: '',
   error: '',
@@ -22,6 +22,7 @@ export const initialState = Map({
 })
 
 export default function SignupLoginReducer(state=initialState, action) {
+  console.log(action)
   switch (action.type) {
     case LOGOUT:
       return initialState

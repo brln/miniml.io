@@ -82,7 +82,12 @@ export default class Login extends PureComponent {
 
           <div style={{paddingTop: "10px"}}>
             <Title htmlFor="passwordInput">Password</Title>
-            <SignupInput id="passwordInput" type={"password"} onChange={this.props.changeSignupPassword(1)} value={this.props.password1}/>
+            <SignupInput
+              id="passwordInput"
+              type={"password"}
+              onChange={this.props.changeSignupPassword('1')}
+              value={this.props.password1}
+            />
           </div>
 
           <div style={{paddingTop: "10px"}}>
@@ -91,7 +96,7 @@ export default class Login extends PureComponent {
               onKeyUp={this.props.checkForSubmit('signup')}
               id="passwordInput"
               type={"password"}
-              onChange={this.props.changeSignupPassword(2)}
+              onChange={this.props.changeSignupPassword('2')}
               value={this.props.password2}
              />
           </div>
