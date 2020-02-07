@@ -1,6 +1,7 @@
 import {
   ADD_RSS_FEED,
   CLEAR_SELECTED_EMAILS,
+  CLEAR_SELECTED_RSS_ARTICLES,
   DESELECT_EMAIL,
   LOG_FUNCTIONAL_ACTION,
   LOGOUT,
@@ -15,7 +16,7 @@ import {
   SET_SIGNUP_LOGIN_VIEW,
   SET_SIGNUP_PASSWORD,
   SET_USERNAME,
-  TOKEN_CHECK_COMPLETE, SET_RSS_FEED_ADD_ERROR,
+  TOKEN_CHECK_COMPLETE, SET_RSS_FEED_ADD_ERROR, TOGGLE_SHOW_READ, SELECT_RSS_ARTICLE, DESELECT_RSS_ARTICLE,
 } from '../constants/actions'
 
 export function logFunctionalAction (name, otherData) {
@@ -41,6 +42,12 @@ export function clearSelectedEmails () {
   }
 }
 
+export function clearSelectedRssArticles () {
+  return {
+    type: CLEAR_SELECTED_RSS_ARTICLES
+  }
+}
+
 export function deselectEmails (ids) {
   return {
     type: DESELECT_EMAIL,
@@ -51,6 +58,20 @@ export function deselectEmails (ids) {
 export function selectEmails (ids) {
   return {
     type: SELECT_EMAIL,
+    ids
+  }
+}
+
+export function selectRssArticle (ids) {
+  return {
+    type: SELECT_RSS_ARTICLE,
+    ids
+  }
+}
+
+export function deselectRssArticle (ids) {
+  return {
+    type: DESELECT_RSS_ARTICLE,
     ids
   }
 }
@@ -141,6 +162,12 @@ export function setSignupPassword (value, whichOne) {
 export function tokenCheckComplete () {
   return {
     type: TOKEN_CHECK_COMPLETE
+  }
+}
+
+export function toggleShowRead () {
+  return {
+    type: TOGGLE_SHOW_READ,
   }
 }
 

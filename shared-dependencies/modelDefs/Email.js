@@ -1,5 +1,4 @@
 export default (baseModel, DataTypes) => {
-  // @TODO: INDEXES!
   class Email extends baseModel {
     static init(sequelize) {
       return super.init(this.modelDef(), {

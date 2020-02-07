@@ -36,7 +36,7 @@ export const Subject = styled.div`
 `
 
 export const From = styled.div`
-  font-size: 130%;
+  font-size: 100%;
   color: ${p => p.read ? 'grey' : 'black'};
 `
 

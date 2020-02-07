@@ -13,6 +13,7 @@ import Settings from './Settings'
 import Email from './Email'
 import styled from "styled-components"
 import AccountButton from "../components/Main/AccountButton"
+import RssArticle from './RssArticle'
 
 const Header = styled.div`
   border: 1px solid black;
@@ -51,6 +52,7 @@ class Main extends PureComponent {
           <AccountButton logout={this.logout}/>
         </Header>
         <Switch>
+          <Route path="/messages/articles/:id" component={RssArticle} />
           <Route path="/messages/email/:id" component={Email} />
           <Route path="/messages" component={Messages} />
           <Route path="/settings" component={Settings} />

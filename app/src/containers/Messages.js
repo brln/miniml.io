@@ -5,9 +5,13 @@ import MessageListing from '../components/Messages/MessageListing'
 
 import {
   clearSelectedEmails,
+  clearSelectedRssArticles,
   deselectEmails,
+  deselectRssArticle,
   selectEmails,
-  setEmailPage
+  selectRssArticle,
+  setEmailPage,
+  toggleShowRead,
 } from '../actions/standard'
 import { MainBox } from '../components/Shared/MainBox'
 
@@ -17,15 +21,16 @@ class Messages extends PureComponent {
     this.state = {
       selectAllEmailsChecked: false
     }
-    this.deselectAllEmails = this.deselectAllEmails.bind(this)
-    this.markArchived = this.markArchived.bind(this)
+    this.deselectAll = this.deselectAll.bind(this)
     this.markRead = this.markRead.bind(this)
     this.markUnread = this.markUnread.bind(this)
     this.nextPage = this.nextPage.bind(this)
     this.previousPage = this.previousPage.bind(this)
     this.selectAllEmails = this.selectAllEmails.bind(this)
     this.selectEmail = this.selectEmail.bind(this)
+    this.selectRssArticle = this.selectRssArticle.bind(this)
     this.toggleSelectAll = this.toggleSelectAll.bind(this)
+    this.showReadToggle = this.showReadToggle.bind(this)
   }
 
   componentDidMount() {
@@ -43,26 +48,31 @@ class Messages extends PureComponent {
     }
   }
 
-  selectAllEmails () {
-    this.props.dispatch(selectEmails(this.props.emails.keySeq().toList()))
+  selectRssArticle (id) {
+    return () => {
+      if (this.props.selectedRssArticles.includes(id)) {
+        this.props.dispatch(deselectRssArticle([id]))
+      } else {
+        this.props.dispatch(selectRssArticle([id]))
+      }
+    }
   }
 
-  deselectAllEmails () {
+  selectAllEmails () {
+    this.props.dispatch(selectEmails(this.props.emails.keySeq().toList()))
+    this.props.dispatch(selectRssArticle(this.props.articles.keySeq().toList()))
+  }
+
+  deselectAll () {
     this.props.dispatch(clearSelectedEmails())
+    this.props.dispatch(clearSelectedRssArticles())
   }
 
   markRead () {
     this.props.dispatch(functional.bulkUpdateSelectedEmails({read: true}, this.props.emailPage)).then(() => {
-      this.props.dispatch(clearSelectedEmails())
-      this.setState({
-        selectAllEmailsChecked: false
-      })
-    })
-  }
-
-  markArchived () {
-    this.props.dispatch(functional.bulkUpdateSelectedEmails({archived: true}, this.props.emailPage)).then(() => {
-      this.props.dispatch(clearSelectedEmails())
+      return this.props.dispatch(functional.bulkUpdateSelectedRssArticles({read: true}, this.props.emailPage))
+    }).then(() => {
+      this.deselectAll()
       this.setState({
         selectAllEmailsChecked: false
       })
@@ -71,7 +81,9 @@ class Messages extends PureComponent {
 
   markUnread () {
     this.props.dispatch(functional.bulkUpdateSelectedEmails({read: false}, this.props.emailPage)).then(() => {
-      this.props.dispatch(clearSelectedEmails())
+      return this.props.dispatch(functional.bulkUpdateSelectedRssArticles({read: false}, this.props.emailPage))
+    }).then(() => {
+      this.deselectAll()
       this.setState({
         selectAllEmailsChecked: false
       })
@@ -86,7 +98,7 @@ class Messages extends PureComponent {
       this.setState({
         selectAllEmailsChecked: false
       })
-      this.deselectAllEmails()
+      this.deselectAll()
       this.props.dispatch(setEmailPage(nextPage))
     })
   }
@@ -100,14 +112,14 @@ class Messages extends PureComponent {
         this.setState({
           selectAllEmailsChecked: false
         })
-        this.deselectAllEmails()
+        this.deselectAll()
         this.props.dispatch(setEmailPage(nextPage))
       })
     }
   }
 
   toggleSelectAll (e) {
-    if (e.target.checked) {
+    if (!this.state.selectAllEmailsChecked) {
       this.setState({
         selectAllEmailsChecked: true
       })
@@ -116,8 +128,12 @@ class Messages extends PureComponent {
       this.setState({
         selectAllEmailsChecked: false
       })
-      this.deselectAllEmails()
+      this.deselectAll()
     }
+  }
+
+  showReadToggle () {
+    this.props.dispatch(toggleShowRead())
   }
 
   render () {
@@ -127,7 +143,6 @@ class Messages extends PureComponent {
           articles={this.props.articles}
           emails={this.props.emails}
           emailPage={this.props.emailPage}
-          markArchived={this.markArchived}
           markRead={this.markRead}
           markUnread={this.markUnread}
           nextPage={this.nextPage}
@@ -135,6 +150,10 @@ class Messages extends PureComponent {
           selectAllEmailsChecked={this.state.selectAllEmailsChecked}
           selectEmail={this.selectEmail}
           selectedEmails={this.props.selectedEmails}
+          selectedRssArticles={this.props.selectedRssArticles}
+          selectRssArticle={this.selectRssArticle}
+          showReadToggle={this.showReadToggle}
+          showRead={this.props.showRead}
           toggleEmailRead={this.toggleEmailRead}
           toggleSelectAll={this.toggleSelectAll}
         />
@@ -148,7 +167,9 @@ function mapStateToProps (state) {
     articles: state.getIn(['localState', 'articles']),
     emails: state.getIn(['localState', 'emails']),
     emailPage: state.getIn(['localState', 'emailPage']),
-    selectedEmails: state.getIn(['localState', 'selectedEmails'])
+    selectedEmails: state.getIn(['localState', 'selectedEmails']),
+    selectedRssArticles: state.getIn(['localState', 'selectedRssArticles']),
+    showRead: state.getIn(['localState', 'showRead']),
   }
 }
 

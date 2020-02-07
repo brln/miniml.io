@@ -36,7 +36,7 @@ const Button = styled.div`
   cursor: pointer;
 `
 
-export default class MessageListing extends React.Component {
+export default class MessageListing extends React.PureComponent {
   constructor (props) {
     super(props)
   }
@@ -45,18 +45,23 @@ export default class MessageListing extends React.Component {
     const articles = this.props.articles.valueSeq().map(article => {
       return [article.get('pubDate'), (
         <RssArticleRow
+          key={article.get('id')}
           article={article}
+          showRead={this.props.showRead}
+          selectRssArticle={this.props.selectRssArticle}
+          checked={this.props.selectedRssArticles.includes(article.get('id'))}
         />
       )]
     })
 
     const emails = this.props.emails.valueSeq().map(email => {
-      console.log(email.toJSON())
       return [email.get('date'), (
         <EmailRow
+          key={email.get('id')}
           email={email}
           selectEmail={this.props.selectEmail}
-          selectedEmails={this.props.selectedEmails}
+          showRead={this.props.showRead}
+          checked={this.props.selectedEmails.includes(email.get('id'))}
         />
       )]
     })
@@ -69,13 +74,16 @@ export default class MessageListing extends React.Component {
       <>
         <Header>
           <ButtonRow>
-            <Button className="disable-select">
-              <input type="checkbox" onClick={this.props.toggleSelectAll} checked={this.props.selectAllEmailsChecked}/>
+            <Button className="disable-select"  onClick={this.props.toggleSelectAll}>
+              <input type="checkbox" checked={this.props.selectAllEmailsChecked}/>
               <> All</>
             </Button>
+            <Button className="disable-select" onClick={this.props.showReadToggle}>
+              <input type="checkbox" checked={this.props.showRead}/>
+              <> Show Read</>
+            </Button>
             <Button className="disable-select" onClick={this.props.markRead}>Mark Read</Button>
-            <Button className="disable-select" onClick={this.props.markUnread}>Mark Unread</Button>
-            <Button className="disable-select" onClick={this.props.markArchived}>Archive</Button>
+            { this.props.showRead ? <Button className="disable-select" onClick={this.props.markUnread}>Mark Unread</Button> : null }
           </ButtonRow>
 
           <Paginator>

@@ -15,12 +15,14 @@ export function between (deliveryTime, offset) {
   const delivery = deliveryTime.split(':')
   const deliveryHour = parseInt(delivery[0])
   const deliveryMinute = parseInt(delivery[1])
+  const deliveryMinuteOfDay = (deliveryHour * 60 + deliveryMinute)
 
   const currentHour = moment().hour()
   const currentMinute = moment().minute()
+  const currentMinuteOfDay = (currentHour * 60) + currentMinute
 
   let deliverTodays = 1
-  if (currentHour >= deliveryHour && currentMinute > deliveryMinute) {
+  if (currentMinuteOfDay > deliveryMinuteOfDay) {
     deliverTodays = 0
   }
 

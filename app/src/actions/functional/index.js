@@ -106,6 +106,17 @@ function getRssFeeds () {
   }
 }
 
+function getRssArticle (id) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    return apiClient.get(`/api/rss/articles/${id}`).then(article => {
+      const byID = {[article.id]: article}
+      dispatch(setArticles(byID))
+    })
+  }
+}
+
 function toggleEmailRead (id) {
   return (dispatch, getState) => {
     const token = getState().getIn(['localState', 'authToken'])
@@ -115,6 +126,19 @@ function toggleEmailRead (id) {
       const currentEmails = getState().getIn(['localState', 'emails'])
       const newEmails = currentEmails.set(email.id, fromJS(email))
       dispatch(setEmails(newEmails))
+    })
+  }
+}
+
+function toggleRssArticleRead (id) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    const newValue = !getState().getIn(['localState', 'articles', id, 'read'])
+    apiClient.post(`/api/rss/articles/${id}`, {read: newValue}).then(article => {
+      const currentArticles = getState().getIn(['localState', 'articles'])
+      const newArticles = currentArticles.set(article.id, fromJS(article))
+      dispatch(setArticles(newArticles))
     })
   }
 }
@@ -131,6 +155,25 @@ function bulkUpdateSelectedEmails (newValues, offset=0) {
           return accum
         }, {})
         dispatch(setEmails(byID))
+      })
+    } else {
+      return Promise.resolve()
+    }
+  }
+}
+
+function bulkUpdateSelectedRssArticles (newValues, offset=0) {
+  return (dispatch, getState) => {
+    const articleIDs = getState().getIn(['localState', 'selectedRssArticles'])
+    if (articleIDs.count() > 0) {
+      const token = getState().getIn(['localState', 'authToken'])
+      const apiClient = new ApiClient(token)
+      return apiClient.post(`/api/rss/articles`, {ids: articleIDs, updates: newValues, offset}).then(articles => {
+        const byID = articles.reduce((accum, article) => {
+          accum[article.id] = article
+          return accum
+        }, {})
+        dispatch(setArticles(byID))
       })
     } else {
       return Promise.resolve()
@@ -178,16 +221,19 @@ function tryToFetchAuthToken () {
 // while testing some other functional action from this same module.
 const functional = {
   bulkUpdateSelectedEmails,
+  bulkUpdateSelectedRssArticles,
   doLogin,
   doLogout,
   doSignup,
   getArticles,
   getEmail,
   getEmails,
+  getRssArticle,
   getRssFeeds,
   onBoot,
   submitRssFeed,
   toggleEmailRead,
+  toggleRssArticleRead,
   tryToFetchAuthToken,
 }
 export default functional

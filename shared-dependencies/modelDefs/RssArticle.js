@@ -48,9 +48,10 @@ export default (baseModel, DataTypes) => {
         },
       }
     }
-
+                                                                      
     static associate(models) {
       this.belongsTo(models.RssFeed, {foreignKey: 'id'})
+      this.hasMany(models.RssArticleUser, {foreignKey: 'rssArticleID'})
     }
   }
   return RssArticle

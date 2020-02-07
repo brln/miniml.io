@@ -24,6 +24,7 @@ export default (baseModel, DataTypes) => {
       this.messages = this.hasMany(models.Message, { foreignKey: 'userID' })
       this.emails = this.hasMany(models.Email, { foreignKey: 'userID' })
       this.rssFeeds = this.belongsToMany(models.RssFeed, {through: models.RssFeedUser})
+      this.rssArticleUsers = this.hasMany(models.RssArticleUser, { foreignKey: 'userID'})
     }
   }
   return User

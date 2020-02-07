@@ -11,8 +11,9 @@ import {
   RssRouter,
 } from './routes'
 import { configGet, ENV, LOGGING_TYPE } from './config'
-import { SqsService } from "./services"
+import { SqsService, RssUpdater } from "./services"
 
+RssUpdater.startCron(RssUpdater.rssFullUpdate)
 
 const server = express()
 

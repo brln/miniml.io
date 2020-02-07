@@ -9,7 +9,7 @@ const router = express.Router()
 
 router.get('/', endpointAuth, (req, res, next) => {
   const username = res.locals.username
-  const date = helpers.between('12:23', parseInt(req.query.offset) || 0)
+  const date = helpers.between('1:00', parseInt(req.query.offset) || 0)
 
   db.Email.findAll({
     where: {
@@ -32,7 +32,6 @@ router.post('/', endpointAuth, (req, res, next) => {
     const offset = parseInt(req.body.offset) || 0
     return db.Email.findAll({where: {userID: username, archived: false}, offset, limit: 50, order: [['date', 'DESC']]})
   }).then(emails => {
-    console.log('emails', emails)
     res.json(emails)
   }).catch(next)
 })

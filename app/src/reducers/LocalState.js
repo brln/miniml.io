@@ -13,7 +13,8 @@ import {
   SET_EMAIL_PAGE,
   SET_RSS_FEEDS,
   SET_RSS_FEED_ADD_ERROR,
-  TOKEN_CHECK_COMPLETE,
+  TOGGLE_SHOW_READ,
+  TOKEN_CHECK_COMPLETE, SELECT_RSS_ARTICLE, DESELECT_RSS_ARTICLE, CLEAR_SELECTED_RSS_ARTICLES,
 } from '../constants/actions'
 
 export const initialState = fromJS({
@@ -25,6 +26,8 @@ export const initialState = fromJS({
   rssFeeds: {},
   rssFeedAddError: null,
   selectedEmails: [],
+  selectedRssArticles: [],
+  showRead: false,
   tokenCheckComplete: false
 })
 
@@ -54,6 +57,8 @@ export default function LocalStateReducer(state=initialState, action) {
       return state.setIn(['rssFeeds', action.data.id], fromJS(action.data))
     case CLEAR_SELECTED_EMAILS:
       return state.set('selectedEmails', List())
+    case CLEAR_SELECTED_RSS_ARTICLES:
+      return state.set('selectedRssArticles', List())
     case DESELECT_EMAIL:
       let newDeselected = state.get('selectedEmails')
       for (let id of action.ids) {
@@ -61,6 +66,13 @@ export default function LocalStateReducer(state=initialState, action) {
         newDeselected = newDeselected.splice(index, 1)
       }
       return state.set('selectedEmails', newDeselected)
+    case DESELECT_RSS_ARTICLE:
+      let newDeselectedRss = state.get('selectedRssArticles')
+      for (let id of action.ids) {
+        const index = state.get('selectedRssArticles').indexOf(id)
+        newDeselectedRss = newDeselectedRss.splice(index, 1)
+      }
+      return state.set('selectedRssArticles', newDeselectedRss)
     case LOGOUT:
       return initialState.set('tokenCheckComplete', true)
     case SELECT_EMAIL:
@@ -68,8 +80,13 @@ export default function LocalStateReducer(state=initialState, action) {
       for (let id of action.ids) {
         newSelected = newSelected.push(id)
       }
-      console.log(newSelected.toJSON())
       return state.set('selectedEmails', newSelected)
+    case SELECT_RSS_ARTICLE:
+      let newSelectedRss = state.get('selectedRssArticles')
+      for (let id of action.ids) {
+        newSelectedRss = newSelectedRss.push(id)
+      }
+      return state.set('selectedRssArticles', newSelectedRss)
     case SET_AUTH_TOKEN:
       return state.set('authToken', action.authToken)
     case SET_ARTICLES:
@@ -82,6 +99,8 @@ export default function LocalStateReducer(state=initialState, action) {
       return state.set('rssFeeds', fromJS(action.rssFeeds))
     case SET_RSS_FEED_ADD_ERROR:
       return state.set('rssFeedAddError', action.error)
+    case TOGGLE_SHOW_READ:
+      return state.set('showRead', !state.get('showRead'))
     case TOKEN_CHECK_COMPLETE:
       return state.set('tokenCheckComplete', true)
     default:
