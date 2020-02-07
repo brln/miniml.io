@@ -37,7 +37,7 @@ function doSignup () {
     const apiClient = new ApiClient()
     apiClient.post('/api/account/signup', {
       username: getState().getIn(['signupLogin', 'username']),
-      password: getState().getIn(['signupLogin', 'signupPassword', 1]),
+      password: getState().getIn(['signupLogin', 'signupPassword', '1']),
     }).then(resp => {
       dispatch(onAuthTokenReceipt(resp.authToken))
     }).catch(e => {

@@ -9,7 +9,7 @@ import moment from "moment"
 export default class RssUpdater {
   static startCron(toRun) {
     if (configGet(IS_LEADER)) {
-      const everyFiveMinutes = '*/5 * * * *'
+      const everyFiveMinutes = '* * * * *'
       cron.schedule(everyFiveMinutes, toRun, {})
     }
   }
@@ -41,7 +41,7 @@ export default class RssUpdater {
             const guid = item.guid || MurmurHash3(feed.id).hash(item.title).hash(item.link).result().toString()
             articles[guid] = {
               id: helpers.getID(),
-              feedID: feed.id,
+              rssFeedID: feed.id,
               guid,
               title:  item.title,
               link:  item.link,

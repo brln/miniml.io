@@ -19,7 +19,7 @@ router.post('/feeds', endpointAuth, (req, res, next) => {
   }).then(user => {
     return db.RssFeed.findOne({where: {link: req.body.url}}).then(foundFeed => {
       if (foundFeed) {
-        return db.RssFeedUser.findOne({where: {RssFeedID: foundFeed.id, UserUsername: user.username}}).then(foundUserFeed => {
+        return db.RssFeedUser.findOne({where: {rssFeedID: foundFeed.id, userID: user.username}}).then(foundUserFeed => {
           if (foundUserFeed) {
             return Promise.resolve()
           } else {
@@ -173,7 +173,7 @@ const fetchArticles = (req, res, next) => {
     const feedIDs = feeds.map(f => f.id)
     return db.RssArticle.findAll({
       where: {
-        feedID: feedIDs,
+        rssFeedID: feedIDs,
         pubDate: {
           [Op.between]: [betweenDate.yesterday, betweenDate.today]
         }

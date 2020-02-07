@@ -9,7 +9,7 @@ const router = express.Router()
 
 router.get('/', endpointAuth, (req, res, next) => {
   const username = res.locals.username
-  const date = helpers.between('1:00', parseInt(req.query.offset) || 0)
+  const date = helpers.between('8:59', parseInt(req.query.offset) || 0)
 
   db.Email.findAll({
     where: {

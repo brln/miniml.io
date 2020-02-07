@@ -1,4 +1,3 @@
-export const ADMIN_PASSWORD = 'ADMIN_PASSWORD'
 export const DB_USERNAME = 'DB_USERNAME'
 export const DB_PASSWORD = 'DB_PASSWORD'
 export const DB_DATABASE = 'DB_DATABASE'
@@ -12,7 +11,6 @@ export const IS_LEADER = 'IS_LEADER'
 export const TOP_SECRET_JWT_TOKEN = 'TOP_SECRET_JWT_TOKEN'
 
 const defaults = {
-  [ADMIN_PASSWORD]: 'some strong admin password',
   [LOGGING_TYPE]: 'dev',
   [DB_USERNAME]: 'miniml',
   [DB_PASSWORD]: 'password',

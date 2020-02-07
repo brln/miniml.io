@@ -26,6 +26,7 @@ router.post('/signup', function(req, res, next) {
     }
   }).catch(e => {
     console.log(e)
+    next(e)
   })
 })
 
@@ -47,6 +48,7 @@ router.post('/login', (req, res, next) => {
       })
     }
   }).catch(e => {
+    console.log(e)
     next(e)
   })
 })

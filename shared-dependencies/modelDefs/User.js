@@ -21,9 +21,8 @@ export default (baseModel, DataTypes) => {
     }
 
     static associate(models) {
-      this.messages = this.hasMany(models.Message, { foreignKey: 'userID' })
       this.emails = this.hasMany(models.Email, { foreignKey: 'userID' })
-      this.rssFeeds = this.belongsToMany(models.RssFeed, {through: models.RssFeedUser})
+      this.rssFeeds = this.belongsToMany(models.RssFeed, {through: models.RssFeedUser, foreignKey: 'userID', otherKey: 'rssFeedID'})
       this.rssArticleUsers = this.hasMany(models.RssArticleUser, { foreignKey: 'userID'})
     }
   }
