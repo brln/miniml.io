@@ -30,13 +30,13 @@ export const IconBox = styled.div`
 `
 
 export const Subject = styled.div`
-  font-size: 130%;
+  font-size: 100%;
   color: ${p => p.read ? 'grey' : 'black'};
   padding-right: 1em;
 `
 
 export const From = styled.div`
-  font-size: 100%;
+  font-size: 80%;
   color: ${p => p.read ? 'grey' : 'black'};
 `
 
@@ -48,5 +48,6 @@ export const DateBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  font-size: 80%;
 `
 

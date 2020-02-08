@@ -163,7 +163,7 @@ const fetchArticles = (req, res, next) => {
   const username = res.locals.username
   let feeds
   let user
-  const betweenDate = helpers.between('1:00', parseInt(req.query.offset) || 0)
+  const betweenDate = helpers.between('13:00', parseInt(req.query.offset) || 0)
   return db.User.findByPk(username).then(_user => {
     user = _user
     return user.getRssFeeds()

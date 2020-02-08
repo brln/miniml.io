@@ -17,8 +17,8 @@ export function between (deliveryTime, offset) {
   const deliveryMinute = parseInt(delivery[1])
   const deliveryMinuteOfDay = (deliveryHour * 60 + deliveryMinute)
 
-  const currentHour = moment().hour()
-  const currentMinute = moment().minute()
+  const currentHour = moment().utc().hour()
+  const currentMinute = moment().utc().minute()
   const currentMinuteOfDay = (currentHour * 60) + currentMinute
 
   let deliverTodays = 1
