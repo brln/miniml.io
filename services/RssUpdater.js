@@ -9,7 +9,7 @@ import moment from "moment"
 export default class RssUpdater {
   static startCron(toRun) {
     if (configGet(IS_LEADER)) {
-      const everyFiveMinutes = '* * * * *'
+      const everyFiveMinutes = '*/15 * * * *'
       cron.schedule(everyFiveMinutes, toRun, {})
     }
   }
