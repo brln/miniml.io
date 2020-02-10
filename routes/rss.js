@@ -1,10 +1,12 @@
 import express from 'express'
 import endpointAuth from '../auth'
 import Parser from 'rss-parser'
+import moment from 'moment-timezone'
 
 import db from '../models'
 import { helpers } from 'shared-dependencies'
 import {Op} from "sequelize"
+import { RssUpdater } from '../services'
 
 const router = express.Router()
 
@@ -55,6 +57,8 @@ router.post('/feeds', endpointAuth, (req, res, next) => {
         }).then(_created => {
           created = _created
           return user.addRssFeed(created, {through: {id: helpers.getID()}})
+        }).then(() => {
+          RssUpdater.rssFetchBatchArticles([created])
         }).then(() => {
           res.json(created)
         })
@@ -163,11 +167,13 @@ const fetchArticles = (req, res, next) => {
   const username = res.locals.username
   let feeds
   let user
-  const betweenDate = helpers.between('13:00', parseInt(req.query.offset) || 0)
+
   return db.User.findByPk(username).then(_user => {
     user = _user
     return user.getRssFeeds()
   }).then(_feeds => {
+    const deliveryTimeUTC = moment().tz(user.deliveryTimezone).hour(user.deliveryTime).utc().hour()
+    const betweenDate = helpers.between(`${deliveryTimeUTC}:00`, parseInt(req.query.offset) || 0)
     feeds = _feeds
     const feedIDs = feeds.map(f => f.id)
     return db.RssArticle.findAll({

@@ -16,6 +16,12 @@ export default (baseModel, DataTypes) => {
         password: {
           type: DataTypes.STRING,
           nullable: false,
+        },
+        deliveryTime: {
+          type: DataTypes.STRING,
+        },
+        deliveryTimezone: {
+          type: DataTypes.STRING,
         }
       }
     }

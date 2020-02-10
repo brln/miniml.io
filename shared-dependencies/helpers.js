@@ -28,7 +28,7 @@ export function between (deliveryTime, offset) {
 
   const hoursBackToday = (offset + deliverTodays) * 24
   const hoursBackYesterday = (offset + 1 + deliverTodays) * 24
-  const today = moment().startOf('day').add(deliveryHour, 'hours').add(deliveryMinute, 'minutes').subtract(hoursBackToday, 'hours')
-  const yesterday = moment().startOf('day').add(deliveryHour, 'hours').add(deliveryMinute, 'minutes').subtract(hoursBackYesterday, 'hours')
+  const today = moment().utc().startOf('day').add(deliveryHour, 'hours').add(deliveryMinute, 'minutes').subtract(hoursBackToday, 'hours')
+  const yesterday = moment().utc().startOf('day').add(deliveryHour, 'hours').add(deliveryMinute, 'minutes').subtract(hoursBackYesterday, 'hours')
   return {yesterday, today}
 }

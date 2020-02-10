@@ -15,7 +15,7 @@ import {
   setLoginError,
   setRssFeeds,
   setRssFeedAddError,
-  tokenCheckComplete,
+  tokenCheckComplete, setUserData,
 } from '../../actions/standard'
 
 function getArticles (offset) {
@@ -117,6 +117,16 @@ function getRssArticle (id) {
   }
 }
 
+function getUserData () {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    return apiClient.get(`/api/account/user`).then(userData => {
+      dispatch(setUserData(userData))
+    })
+  }
+}
+
 function toggleEmailRead (id) {
   return (dispatch, getState) => {
     const token = getState().getIn(['localState', 'authToken'])
@@ -207,6 +217,16 @@ function submitRssFeed (url) {
   }
 }
 
+function updateUserData (newData) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    return apiClient.post(`/api/account/user`, newData).then(user => {
+      dispatch(setUserData(user))
+    })
+  }
+}
+
 function tryToFetchAuthToken () {
   return (dispatch) => {
     const token = AuthStorageService.getToken()
@@ -230,10 +250,12 @@ const functional = {
   getEmails,
   getRssArticle,
   getRssFeeds,
+  getUserData,
   onBoot,
   submitRssFeed,
   toggleEmailRead,
   toggleRssArticleRead,
   tryToFetchAuthToken,
+  updateUserData,
 }
 export default functional

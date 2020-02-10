@@ -43,7 +43,6 @@ export default class FrontendBase extends Map {
         }).toJS()
       }
     }
-    console.log(createFields)
     return createFields
   }
 

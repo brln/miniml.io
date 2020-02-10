@@ -5,11 +5,13 @@
   "scripts": {
     "start": "cd app && rm -rf node_modules && npm install && (PUBLIC_URL='/app' npm run build &) && cd .. && npx sequelize-cli db:migrate && node ./bin/babel.www",
     "dev": "cd app && (npm start &) && cd .. && node-dev --max-old-space-size=8192 ./bin/babel.www",
-    "backend-dev": "npx sequelize-cli db:migrate && node-dev --max-old-space-size=8192 ./bin/babel.www",
+    "backend-dev": "node-dev --max-old-space-size=8192 ./bin/babel.www",
     "frontend-dev": "cd app && npm start",
     "init-db": "cd /usr/local/mysql/bin/ && echo 'DROP DATABASE IF EXISTS miniml; CREATE DATABASE miniml CHARACTER SET utf8 COLLATE utf8_general_ci' | ./mysql -u miniml -p && cd -",
     "lint": "(npx eslint . --ignore-pattern '/app/') && (cd app && npx eslint .)",
-    "lintfix": "(npx eslint . --ignore-pattern '/app/' --fix) && (cd app && npx eslint . --fix)"
+    "lintfix": "(npx eslint . --ignore-pattern '/app/' --fix) && (cd app && npx eslint . --fix)",
+    "migrate-down": "npx sequelize-cli db:migrate:undo",
+    "migrate": "npx sequelize-cli db:migrate"
   },
   "dependencies": {
     "aws-sdk": "^2.528.0",
@@ -27,6 +29,7 @@
     "imurmurhash": "^0.1.4",
     "jsonwebtoken": "^8.5.1",
     "mailparser": "^2.7.7",
+    "moment-timezone": "^0.5.27",
     "morgan": "^1.9.1",
     "mysql2": "^2.0.0",
     "node-cron": "^2.0.3",

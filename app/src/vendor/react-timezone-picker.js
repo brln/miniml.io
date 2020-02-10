@@ -393,15 +393,17 @@ const zones = [
 })
 
 const TimezonePicker = ({ unselectLabel, ...props }) => {
+    const zoneOptions = zones.map(timezone => (
+        <option key={timezone} value={timezone}>
+            {timezone}
+        </option>
+    ))
+    zoneOptions.unshift(<option value={null}></option>)
     return (
-        <select {...props}>
-            {unselectLabel && <option key="unset">{unselectLabel}</option>}
-            {zones.map(timezone => (
-                <option key={timezone} value={timezone}>
-                    {timezone}
-                </option>
-            ))}
-        </select>
+      <select {...props}>
+        {unselectLabel && <option key="unset">{unselectLabel}</option>}
+        { zoneOptions }
+      </select>
     )
 }
 

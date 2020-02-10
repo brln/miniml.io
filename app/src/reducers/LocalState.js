@@ -13,6 +13,7 @@ import {
   SET_EMAIL_PAGE,
   SET_RSS_FEEDS,
   SET_RSS_FEED_ADD_ERROR,
+  SET_USER_DATA,
   TOGGLE_SHOW_READ,
   TOKEN_CHECK_COMPLETE, SELECT_RSS_ARTICLE, DESELECT_RSS_ARTICLE, CLEAR_SELECTED_RSS_ARTICLES,
 } from '../constants/actions'
@@ -28,7 +29,8 @@ export const initialState = fromJS({
   selectedEmails: [],
   selectedRssArticles: [],
   showRead: false,
-  tokenCheckComplete: false
+  tokenCheckComplete: false,
+  userData: {},
 })
 
 function appendLog (state, action) {
@@ -97,6 +99,8 @@ export default function LocalStateReducer(state=initialState, action) {
       return state.set('emailPage', action.page)
     case SET_RSS_FEEDS:
       return state.set('rssFeeds', fromJS(action.rssFeeds))
+    case SET_USER_DATA:
+      return state.set('userData', fromJS(action.userData))
     case SET_RSS_FEED_ADD_ERROR:
       return state.set('rssFeedAddError', action.error)
     case TOGGLE_SHOW_READ:

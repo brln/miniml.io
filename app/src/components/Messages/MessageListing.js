@@ -36,9 +36,27 @@ const Button = styled.div`
   cursor: pointer;
 `
 
+const DateBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 2em;
+`
+
 export default class MessageListing extends React.PureComponent {
   constructor (props) {
     super(props)
+    this.pageLabel = this.pageLabel.bind(this)
+  }
+
+  pageLabel () {
+    switch (this.props.emailPage) {
+      case 0:
+        return 'Today'
+      case 1:
+        return 'Yesterday'
+      default:
+        return `${this.props.emailPage} days ago`
+    }
   }
 
   render () {
@@ -86,10 +104,23 @@ export default class MessageListing extends React.PureComponent {
             { this.props.showRead ? <Button className="disable-select" onClick={this.props.markUnread}>Mark Unread</Button> : null }
           </ButtonRow>
 
-          <Paginator>
-            <PaginatorButton emailPage={this.props.emailPage} onClick={this.props.previousPage}><FaArrowLeft /></PaginatorButton>
-            <PaginatorButton onClick={this.props.nextPage}><FaArrowRight /></PaginatorButton>
-          </Paginator>
+          <ButtonRow>
+            <DateBox className="disable-select">{this.pageLabel()}</DateBox>
+            <Paginator>
+              <PaginatorButton
+                emailPage={this.props.emailPage}
+                onClick={this.props.previousPage}
+              >
+                <FaArrowLeft />
+              </PaginatorButton>
+              <PaginatorButton
+                onClick={this.props.nextPage}
+              >
+                <FaArrowRight />
+              </PaginatorButton>
+            </Paginator>
+          </ButtonRow>
+
         </Header>
         { listItems }
       </>

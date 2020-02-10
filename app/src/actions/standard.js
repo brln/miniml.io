@@ -16,7 +16,12 @@ import {
   SET_SIGNUP_LOGIN_VIEW,
   SET_SIGNUP_PASSWORD,
   SET_USERNAME,
-  TOKEN_CHECK_COMPLETE, SET_RSS_FEED_ADD_ERROR, TOGGLE_SHOW_READ, SELECT_RSS_ARTICLE, DESELECT_RSS_ARTICLE,
+  SET_USER_DATA,
+  TOKEN_CHECK_COMPLETE,
+  SET_RSS_FEED_ADD_ERROR,
+  TOGGLE_SHOW_READ,
+  SELECT_RSS_ARTICLE,
+  DESELECT_RSS_ARTICLE,
 } from '../constants/actions'
 
 export function logFunctionalAction (name, otherData) {
@@ -159,6 +164,14 @@ export function setSignupPassword (value, whichOne) {
     whichOne,
   }
 }
+
+export function setUserData (userData) {
+  return {
+    type: SET_USER_DATA,
+    userData
+  }
+}
+
 export function tokenCheckComplete () {
   return {
     type: TOKEN_CHECK_COMPLETE
