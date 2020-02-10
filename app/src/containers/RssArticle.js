@@ -35,7 +35,7 @@ class RssArticle extends PureComponent {
           <h2>{ this.props.article.get('title') }</h2>
           <h4>{ this.props.article.get('author') }</h4>
           <div dangerouslySetInnerHTML={{ __html: this.props.article.get('content')}} />
-          <a href={this.props.article.get('link')}>{this.props.article.get('link')}</a>
+          <a target="_blank" rel="noopener noreferrer" href={this.props.article.get('link')}>{this.props.article.get('link')}</a>
         </MainBox>
       )
     } else {

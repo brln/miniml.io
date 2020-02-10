@@ -34,6 +34,8 @@ const Button = styled.div`
   margin: 0.2em;
   padding: 0.4em;
   cursor: pointer;
+  background: ${p => p.enabled ? "black" : "white"};
+  color: ${p => !p.enabled ? "black" : "white"};
 `
 
 const DateBox = styled.div`
@@ -93,13 +95,19 @@ export default class MessageListing extends React.PureComponent {
       <>
         <Header>
           <ButtonRow>
-            <Button className="disable-select"  onClick={this.props.toggleSelectAll}>
-              <input type="checkbox" checked={this.props.selectAllEmailsChecked}/>
-              <> All</>
+            <Button
+              className="disable-select"
+              onClick={this.props.toggleSelectAll}
+              enabled={this.props.selectAllEmailsChecked}
+            >
+              <>All</>
             </Button>
-            <Button className="disable-select" onClick={this.props.showReadToggle}>
-              <input type="checkbox" checked={this.props.showRead}/>
-              <> Show Read</>
+            <Button
+              className="disable-select"
+              onClick={this.props.showReadToggle}
+              enabled={this.props.showRead}
+            >
+              <>Show Read</>
             </Button>
             <Button className="disable-select" onClick={this.props.markRead}>Mark Read</Button>
             { this.props.showRead ? <Button className="disable-select" onClick={this.props.markUnread}>Mark Unread</Button> : null }

@@ -21,6 +21,8 @@ export default class RssArticleRow extends React.PureComponent {
 
   render () {
     const read = this.props.article.getIn(['RssArticleUsers', 0, 'read'])
+    const source = this.props.rssFeeds.get(this.props.article.get('rssFeedID'))
+
     if (this.props.showRead || !read) {
       return (
         <Row>
@@ -40,7 +42,7 @@ export default class RssArticleRow extends React.PureComponent {
               style={{color: 'black'}}
             >
               <Subject read={read}>{ this.props.article.get('title') }</Subject>
-              <From read={read}>{ this.props.rssFeeds.get(this.props.article.get('rssFeedID')).get('title')}</From>
+              <From read={read}>{ source ? source.get('title') : ''}</From>
             </PrettyLink>
           </HeaderInfo>
           <DateBox>

@@ -17,7 +17,6 @@ import RowDate from './RowDate'
 export default class EmailRow extends React.PureComponent {
   constructor(props) {
     super(props)
-    this.emailDate = this.emailDate.bind(this)
   }
 
   render () {
