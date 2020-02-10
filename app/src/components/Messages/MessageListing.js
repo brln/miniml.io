@@ -65,6 +65,7 @@ export default class MessageListing extends React.PureComponent {
         <RssArticleRow
           key={article.get('id')}
           article={article}
+          rssFeeds={this.props.rssFeeds}
           showRead={this.props.showRead}
           selectRssArticle={this.props.selectRssArticle}
           checked={this.props.selectedRssArticles.includes(article.get('id'))}

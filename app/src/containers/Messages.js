@@ -35,7 +35,9 @@ class Messages extends PureComponent {
 
   componentDidMount() {
     this.props.dispatch(functional.getEmails(this.props.emailPage))
-    this.props.dispatch(functional.getArticles(this.props.emailPage))
+    this.props.dispatch(functional.getRssFeeds()).then(() => {
+      this.props.dispatch(functional.getArticles(this.props.emailPage))
+    })
   }
 
   selectEmail(id) {
@@ -147,6 +149,7 @@ class Messages extends PureComponent {
           markUnread={this.markUnread}
           nextPage={this.nextPage}
           previousPage={this.previousPage}
+          rssFeeds={this.props.rssFeeds}
           selectAllEmailsChecked={this.state.selectAllEmailsChecked}
           selectEmail={this.selectEmail}
           selectedEmails={this.props.selectedEmails}
@@ -167,6 +170,7 @@ function mapStateToProps (state) {
     articles: state.getIn(['localState', 'articles']),
     emails: state.getIn(['localState', 'emails']),
     emailPage: state.getIn(['localState', 'emailPage']),
+    rssFeeds: state.getIn(['localState', 'rssFeeds']),
     selectedEmails: state.getIn(['localState', 'selectedEmails']),
     selectedRssArticles: state.getIn(['localState', 'selectedRssArticles']),
     showRead: state.getIn(['localState', 'showRead']),

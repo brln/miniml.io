@@ -9,7 +9,7 @@ import {
   Row,
   PrettyLink,
   Subject,
-  DateBox,
+  DateBox, From,
 } from './StyledComponents'
 
 export default class RssArticleRow extends React.PureComponent {
@@ -43,6 +43,7 @@ export default class RssArticleRow extends React.PureComponent {
               style={{color: 'black'}}
             >
               <Subject read={read}>{ this.props.article.get('title') }</Subject>
+              <From read={read}>{ this.props.rssFeeds.get(this.props.article.get('rssFeedID')).get('title')}</From>
             </PrettyLink>
           </HeaderInfo>
           <DateBox>
