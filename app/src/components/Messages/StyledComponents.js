@@ -10,7 +10,8 @@ export const HeaderInfo = styled.div`
 
 export const Row = styled.div`
   display: flex;
-  border: 1px solid black;
+  border: 1px solid #ABA7AC;
+  border-radius: 3px;
   padding: 0.5em;
   margin: 0.2em;
 `

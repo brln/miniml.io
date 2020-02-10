@@ -9,17 +9,14 @@ import {
   Row,
   PrettyLink,
   Subject,
-  DateBox, From,
+  DateBox,
+  From,
 } from './StyledComponents'
+import RowDate from './RowDate'
 
 export default class RssArticleRow extends React.PureComponent {
   constructor(props) {
     super(props)
-    this.articleDate = this.articleDate.bind(this)
-  }
-
-  articleDate () {
-    return moment(this.props.article.get('pubDate')).format('lll')
   }
 
   render () {
@@ -47,7 +44,7 @@ export default class RssArticleRow extends React.PureComponent {
             </PrettyLink>
           </HeaderInfo>
           <DateBox>
-            {this.articleDate()}
+            <RowDate date={this.props.article.get('pubDate')} />
           </DateBox>
         </Row>
       )

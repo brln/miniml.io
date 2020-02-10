@@ -12,15 +12,12 @@ import {
   From,
   DateBox,
 } from './StyledComponents'
+import RowDate from './RowDate'
 
 export default class EmailRow extends React.PureComponent {
   constructor(props) {
     super(props)
     this.emailDate = this.emailDate.bind(this)
-  }
-
-  emailDate () {
-    return moment(this.props.email.get('date')).format('lll')
   }
 
   render () {
@@ -47,7 +44,7 @@ export default class EmailRow extends React.PureComponent {
             </PrettyLink>
           </HeaderInfo>
           <DateBox>
-            {this.emailDate()}
+            <RowDate date={this.props.email.get('date')} />
           </DateBox>
         </Row>
       )
