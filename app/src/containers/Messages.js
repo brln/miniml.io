@@ -25,19 +25,13 @@ class Messages extends PureComponent {
     this.markRead = this.markRead.bind(this)
     this.markUnread = this.markUnread.bind(this)
     this.nextPage = this.nextPage.bind(this)
+    this.openItem = this.openItem.bind(this)
     this.previousPage = this.previousPage.bind(this)
     this.selectAllEmails = this.selectAllEmails.bind(this)
     this.selectEmail = this.selectEmail.bind(this)
     this.selectRssArticle = this.selectRssArticle.bind(this)
     this.toggleSelectAll = this.toggleSelectAll.bind(this)
     this.showReadToggle = this.showReadToggle.bind(this)
-  }
-
-  componentDidMount() {
-    this.props.dispatch(functional.getEmails(this.props.emailPage))
-    this.props.dispatch(functional.getRssFeeds()).then(() => {
-      this.props.dispatch(functional.getArticles(this.props.emailPage))
-    })
   }
 
   selectEmail(id) {
@@ -81,6 +75,10 @@ class Messages extends PureComponent {
     })
   }
 
+  openItem (type, id) {
+    this.props.dispatch(functional.openInboxItem(type, id))
+  }
+
   markUnread () {
     this.props.dispatch(functional.bulkUpdateSelectedEmails({read: false}, this.props.emailPage)).then(() => {
       return this.props.dispatch(functional.bulkUpdateSelectedRssArticles({read: false}, this.props.emailPage))
@@ -93,30 +91,22 @@ class Messages extends PureComponent {
   }
 
   nextPage () {
-    const nextPage = this.props.emailPage + 1
-    this.props.dispatch(functional.getEmails(nextPage)).then(() => {
-      return this.props.dispatch(functional.getArticles(nextPage))
-    }).then(() => {
-      this.setState({
-        selectAllEmailsChecked: false
-      })
-      this.deselectAll()
-      this.props.dispatch(setEmailPage(nextPage))
+    this.props.dispatch(setEmailPage(this.props.emailPage + 1))
+    this.setState({
+      selectAllEmailsChecked: false
     })
+    this.deselectAll()
+    this.props.dispatch(functional.loadInbox())
   }
 
   previousPage () {
     if (this.props.emailPage > 0) {
-      const nextPage = this.props.emailPage - 1
-      this.props.dispatch(functional.getEmails(nextPage)).then(() => {
-        return this.props.dispatch(functional.getArticles(nextPage))
-      }).then(() => {
-        this.setState({
-          selectAllEmailsChecked: false
-        })
-        this.deselectAll()
-        this.props.dispatch(setEmailPage(nextPage))
+      this.props.dispatch(setEmailPage(this.props.emailPage - 1))
+      this.setState({
+        selectAllEmailsChecked: false
       })
+      this.deselectAll()
+      this.props.dispatch(functional.loadInbox())
     }
   }
 
@@ -145,9 +135,12 @@ class Messages extends PureComponent {
           articles={this.props.articles}
           emails={this.props.emails}
           emailPage={this.props.emailPage}
+          inboxItems={this.props.inboxItems}
+          inboxLoading={this.props.inboxLoading}
           markRead={this.markRead}
           markUnread={this.markUnread}
           nextPage={this.nextPage}
+          openItem={this.openItem}
           previousPage={this.previousPage}
           rssFeeds={this.props.rssFeeds}
           selectAllEmailsChecked={this.state.selectAllEmailsChecked}
@@ -170,6 +163,8 @@ function mapStateToProps (state) {
     articles: state.getIn(['localState', 'articles']),
     emails: state.getIn(['localState', 'emails']),
     emailPage: state.getIn(['localState', 'emailPage']),
+    inboxItems: state.getIn(['localState', 'inboxItems']),
+    inboxLoading: state.getIn(['localState', 'inboxLoading']),
     rssFeeds: state.getIn(['localState', 'rssFeeds']),
     selectedEmails: state.getIn(['localState', 'selectedEmails']),
     selectedRssArticles: state.getIn(['localState', 'selectedRssArticles']),

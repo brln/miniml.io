@@ -17,6 +17,11 @@ import RowDate from './RowDate'
 export default class EmailRow extends React.PureComponent {
   constructor(props) {
     super(props)
+    this.onLinkClick = this.onLinkClick.bind(this)
+  }
+
+  onLinkClick () {
+    this.props.openItem('email', this.props.email.get('id'))
   }
 
   render () {
@@ -35,7 +40,7 @@ export default class EmailRow extends React.PureComponent {
           </IconBox>
           <HeaderInfo>
             <PrettyLink
-              to={`/messages/email/${this.props.email.get('id')}`}
+              onClick={this.onLinkClick}
               style={{color: 'black'}}
             >
               <Subject read={this.props.email.get('read')}>{ this.props.email.get('subject') }</Subject>

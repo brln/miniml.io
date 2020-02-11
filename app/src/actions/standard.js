@@ -3,25 +3,28 @@ import {
   CLEAR_SELECTED_EMAILS,
   CLEAR_SELECTED_RSS_ARTICLES,
   DESELECT_EMAIL,
+  DESELECT_RSS_ARTICLE,
   LOG_FUNCTIONAL_ACTION,
   LOGOUT,
   SELECT_EMAIL,
+  SELECT_RSS_ARTICLE,
   SET_AUTH_TOKEN,
   SET_ARTICLES,
   SET_EMAILS,
   SET_EMAIL_PAGE,
+  SET_INBOX_ITEMS,
   SET_LOGIN_ERROR,
   SET_LOGIN_PASSWORD,
   SET_RSS_FEEDS,
+  SET_RSS_FEED_ADD_ERROR,
   SET_SIGNUP_LOGIN_VIEW,
   SET_SIGNUP_PASSWORD,
   SET_USERNAME,
   SET_USER_DATA,
-  TOKEN_CHECK_COMPLETE,
-  SET_RSS_FEED_ADD_ERROR,
+  SET_VIEWING_ARTICLE,
+  SET_VIEWING_EMAIL,
   TOGGLE_SHOW_READ,
-  SELECT_RSS_ARTICLE,
-  DESELECT_RSS_ARTICLE,
+  TOKEN_CHECK_COMPLETE, SET_INBOX_LOADING,
 } from '../constants/actions'
 
 export function logFunctionalAction (name, otherData) {
@@ -129,6 +132,21 @@ export function setEmailPage (page) {
   }
 }
 
+export function setInboxItems (items) {
+  return {
+    type: SET_INBOX_ITEMS,
+    items
+  }
+}
+
+export function setInboxLoading (loading) {
+  return {
+    type: SET_INBOX_LOADING,
+    loading,
+    logData: ['loading']
+  }
+}
+
 export function setLoginError (error) {
   return {
     type: SET_LOGIN_ERROR,
@@ -184,3 +202,16 @@ export function toggleShowRead () {
   }
 }
 
+export function setViewingArticle (article) {
+  return {
+    type: SET_VIEWING_ARTICLE,
+    article
+  }
+}
+
+export function setViewingEmail (email) {
+  return {
+    type: SET_VIEWING_EMAIL,
+    email
+  }
+}

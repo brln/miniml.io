@@ -138,10 +138,9 @@ router.post('/articles/:id', endpointAuth, (req, res, next) => {
     article = _article
     return article.getRssArticleUsers({where: {userID: username}})
   }).then(rssArticleUsers => {
-    let rssArticleUser
+    let updateOrCreate
     if (rssArticleUsers.length) {
-      console.log(rssArticleUsers[0])
-      rssArticleUser = rssArticleUsers[0].update({read: req.body.read})
+      updateOrCreate = rssArticleUsers[0].update({read: req.body.read})
     } else {
       const newArticleUser = {
         id: helpers.getID(),
@@ -149,14 +148,13 @@ router.post('/articles/:id', endpointAuth, (req, res, next) => {
         rssArticleID: article.id,
         read: newRead,
       }
-      rssArticleUser = db.RssArticleUser.create(newArticleUser)
+      updateOrCreate = db.RssArticleUser.create(newArticleUser)
     }
-    return rssArticleUser
-  }).then(rssArticleUser => {
-    // @TODO: figure out a better way to set the read attribue than de/reserializing.
-    const asJS = JSON.parse(JSON.stringify(article))
-    asJS.read = rssArticleUser.read
-    res.json(asJS)
+    return updateOrCreate
+  }).then(() => {
+    return db.RssArticle.findByPk(req.params.id, {include: [db.RssArticleUser]})
+  }).then(rssArticle => {
+    res.json(rssArticle)
   }).catch(e => {
     console.log(e)
     next(e)

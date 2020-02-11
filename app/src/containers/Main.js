@@ -53,7 +53,7 @@ class Main extends PureComponent {
         </Header>
         <Switch>
           <Route path="/messages/articles/:id" component={RssArticle} />
-          <Route path="/messages/email/:id" component={Email} />
+          <Route path="/messages/emails/:id" component={Email} />
           <Route path="/messages" component={Messages} />
           <Route path="/settings" component={Settings} />
 

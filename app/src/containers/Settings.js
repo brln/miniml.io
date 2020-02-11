@@ -87,6 +87,9 @@ class Settings extends PureComponent {
         { this.state.deliveryTimeSaved ? <SavedIndicator>Saved</SavedIndicator> : null }
         <MainBox>
           <div>
+            <h1>Email</h1>
+            <h3>{this.props.userData.get('username')}@miniml.io</h3>
+
             <h1>RSS Feeds</h1>
             { this.props.rssFeedAddError ? <div>{this.props.rssFeedAddError}</div> : null}
             <div>Add Feed: </div>

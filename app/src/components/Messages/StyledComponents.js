@@ -41,8 +41,9 @@ export const From = styled.div`
   color: ${p => p.read ? 'grey' : 'black'};
 `
 
-export const PrettyLink = styled(Link)`
+export const PrettyLink = styled.div`
   text-decoration: none;
+  cursor: pointer;
 `
 
 export const DateBox = styled.div`

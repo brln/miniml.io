@@ -1,30 +1,35 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import {connect} from "react-redux"
-import styled from "styled-components"
 import functional from '../actions/functional'
 import { MainBox } from '../components/Shared/MainBox'
 
-const MessageBox = styled.div`
-  border: 1px solid black;
-`
+import InboxItemShowPage from "./InboxItemShowPage"
+import InboxItemPaginator from "../components/Shared/InboxItemPaginator"
+import { setViewingArticle } from "../actions/standard"
 
-class RssArticle extends PureComponent {
+
+class RssArticle extends InboxItemShowPage {
   constructor(props) {
     super(props)
-    this.toggleRead = this.toggleRead.bind(this)
+    this.backDisabled = this.backDisabled.bind(this)
+    this.forwardDisabled = this.forwardDisabled.bind(this)
+    this.nextPage = this.nextPage.bind(this)
+    this.previousPage = this.previousPage.bind(this)
+    this.changePage = this.changePage.bind(this)
+    this.nextItem = this.nextItem.bind(this)
   }
 
-  toggleRead () {
-    this.props.dispatch(functional.toggleRssArticleRead(this.props.article.get('id')))
+  static getDerivedStateFromProps (props, state) {
+    if (props.article && props.article.get('id') !== props.articleID) {
+      props.dispatch(setViewingArticle(props.articles.get(props.articleID)))
+    }
   }
 
   componentDidMount () {
     if (!this.props.article) {
       this.props.dispatch(functional.getRssArticle(this.props.articleID)).then(() => {
-        this.toggleRead()
+        this.props.dispatch(functional.toggleRssArticleRead(this.props.article.get('id')))
       })
-    } else {
-      this.toggleRead()
     }
   }
 
@@ -32,6 +37,12 @@ class RssArticle extends PureComponent {
     if (this.props.article) {
       return (
         <MainBox>
+          <InboxItemPaginator
+            forwardDisabled={this.forwardDisabled()}
+            backDisabled={this.backDisabled()}
+            nextPage={this.nextPage}
+            previousPage={this.previousPage}
+          />
           <h2>{ this.props.article.get('title') }</h2>
           <h4>{ this.props.article.get('author') }</h4>
           <div dangerouslySetInnerHTML={{ __html: this.props.article.get('content')}} />
@@ -47,8 +58,12 @@ class RssArticle extends PureComponent {
 function mapStateToProps (state, passedProps) {
   const articleID = passedProps.match.params.id
   return {
-    article: state.getIn(['localState', 'articles', articleID]),
+    article: state.getIn(['localState', 'viewingArticle']),
     articleID,
+    articles: state.getIn(['localState', 'articles']),
+    emails: state.getIn(['localState', 'emails']),
+    inboxItems: state.getIn(['localState', 'inboxItems']),
+    itemID: articleID,
   }
 }
 

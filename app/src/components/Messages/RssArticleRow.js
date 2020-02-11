@@ -17,6 +17,11 @@ import RowDate from './RowDate'
 export default class RssArticleRow extends React.PureComponent {
   constructor(props) {
     super(props)
+    this.onLinkClick = this.onLinkClick.bind(this)
+  }
+
+  onLinkClick () {
+    this.props.openItem('rssArticle', this.props.article.get('id'))
   }
 
   render () {
@@ -38,7 +43,7 @@ export default class RssArticleRow extends React.PureComponent {
           </IconBox>
           <HeaderInfo>
             <PrettyLink
-              to={`/messages/articles/${this.props.article.get('id')}`}
+              onClick={this.onLinkClick}
               style={{color: 'black'}}
             >
               <Subject read={read}>{ this.props.article.get('title') }</Subject>

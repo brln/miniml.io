@@ -12,17 +12,22 @@ import {
   setAuthToken,
   setArticles,
   setEmails,
+  setInboxItems,
+  setInboxLoading,
   setLoginError,
   setRssFeeds,
   setRssFeedAddError,
-  tokenCheckComplete, setUserData,
+  setUserData,
+  setViewingArticle,
+  setViewingEmail,
+  tokenCheckComplete,
 } from '../../actions/standard'
 
 function getArticles (offset) {
   return (dispatch, getState) => {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
-    apiClient.get(`/api/rss/articles?offset=${offset}`).then(articles => {
+    return apiClient.get(`/api/rss/articles?offset=${offset}`).then(articles => {
       const byID = articles.reduce((accum, article) => {
         accum[article.id] = article
         return accum
@@ -86,8 +91,7 @@ function getEmail (id) {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
     return apiClient.get(`/api/email/${id}`).then(email => {
-      const byID = {[email.id]: email}
-      dispatch(setEmails(byID))
+      dispatch(setViewingEmail(email))
     })
   }
 }
@@ -111,8 +115,7 @@ function getRssArticle (id) {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
     return apiClient.get(`/api/rss/articles/${id}`).then(article => {
-      const byID = {[article.id]: article}
-      dispatch(setArticles(byID))
+      dispatch(setViewingArticle(article))
     })
   }
 }
@@ -124,6 +127,22 @@ function getUserData () {
     return apiClient.get(`/api/account/user`).then(userData => {
       dispatch(setUserData(userData))
     })
+  }
+}
+
+function openInboxItem (type, id) {
+  return (dispatch, getState) => {
+    if (type === 'rssArticle') {
+      const article = getState().getIn(['localState', 'articles', id])
+      dispatch(setViewingArticle(article))
+      dispatch(toggleRssArticleRead(id))
+      dispatch(push(`/messages/articles/${id}`))
+    } else if (type ==='email') {
+      const email = getState().getIn(['localState', 'emails', id])
+      dispatch(setViewingEmail(email))
+      dispatch(toggleEmailRead(id))
+      dispatch(push(`/messages/emails/${id}`))
+    }
   }
 }
 
@@ -202,6 +221,44 @@ function onAuthTokenReceipt (authToken) {
 function onBoot () {
   return (dispatch, getState) => {
     dispatch(functional.tryToFetchAuthToken())
+    if (getState().getIn(['localState', 'authToken'])) {
+      dispatch(functional.loadInbox())
+    }
+  }
+}
+
+function loadInbox () {
+  return (dispatch, getState) => {
+    const emailPage = getState().getIn(['localState', 'emailPage'])
+    dispatch(setInboxLoading(true))
+    const loadCalls = [
+      dispatch(functional.getEmails(emailPage)),
+      dispatch(functional.getRssFeeds()),
+      dispatch(functional.getArticles(emailPage))
+    ]
+    return Promise.all(loadCalls).then(() => {
+      const articles = getState().getIn(['localState', 'articles']).valueSeq().map(article => {
+        return {
+          type: 'rssArticle',
+          date: article.get('pubDate'),
+          id: article.get('id'),
+        }
+      })
+
+      const emails = getState().getIn(['localState', 'emails']).valueSeq().map(email => {
+        return {
+          type: 'email',
+          date: email.get('date'),
+          id: email.get('id'),
+        }
+      })
+
+      const listItems = [...articles, ...emails].sort((a, b) => {
+        return new Date(b.date) - new Date(a.date)
+      })
+      dispatch(setInboxItems(listItems))
+      dispatch(setInboxLoading(false))
+    })
   }
 }
 
@@ -251,7 +308,9 @@ const functional = {
   getRssArticle,
   getRssFeeds,
   getUserData,
+  loadInbox,
   onBoot,
+  openInboxItem,
   submitRssFeed,
   toggleEmailRead,
   toggleRssArticleRead,

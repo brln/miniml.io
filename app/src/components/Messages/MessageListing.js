@@ -44,6 +44,26 @@ const DateBox = styled.div`
   margin-right: 2em;
 `
 
+const Spinner = styled.div`
+  border: 7px solid #f3f3f3;
+  border-top: 7px solid #a6a6a6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`
+const SpinnerContainer = styled.div`
+  width: 100%;
+  display: flex;
+  padding-top: 10em;
+  justify-content: center;
+`
+
 export default class MessageListing extends React.PureComponent {
   constructor (props) {
     super(props)
@@ -62,34 +82,39 @@ export default class MessageListing extends React.PureComponent {
   }
 
   render () {
-    const articles = this.props.articles.valueSeq().map(article => {
-      return [article.get('pubDate'), (
-        <RssArticleRow
-          key={article.get('id')}
-          article={article}
-          rssFeeds={this.props.rssFeeds}
-          showRead={this.props.showRead}
-          selectRssArticle={this.props.selectRssArticle}
-          checked={this.props.selectedRssArticles.includes(article.get('id'))}
-        />
-      )]
-    })
-
-    const emails = this.props.emails.valueSeq().map(email => {
-      return [email.get('date'), (
-        <EmailRow
-          key={email.get('id')}
-          email={email}
-          selectEmail={this.props.selectEmail}
-          showRead={this.props.showRead}
-          checked={this.props.selectedEmails.includes(email.get('id'))}
-        />
-      )]
-    })
-
-    const listItems = [...articles, ...emails].sort((a, b) => {
-      return new Date(b[0]) - new Date(a[0])
-    }).map(i => i[1])
+    let listItems
+    if (this.props.inboxLoading) {
+      listItems = <SpinnerContainer><Spinner /></SpinnerContainer>
+    } else {
+      listItems = this.props.inboxItems.map(item => {
+        if (item.get('type') === 'email') {
+          const email = this.props.emails.get(item.get('id'))
+          return (
+            <EmailRow
+              key={email.get('id')}
+              email={email}
+              openItem={this.props.openItem}
+              selectEmail={this.props.selectEmail}
+              showRead={this.props.showRead}
+              checked={this.props.selectedEmails.includes(email.get('id'))}
+            />
+          )
+        }  else if (item.get('type') === 'rssArticle') {
+          const article = this.props.articles.get(item.get('id'))
+          return (
+            <RssArticleRow
+              key={article.get('id')}
+              article={article}
+              openItem={this.props.openItem}
+              rssFeeds={this.props.rssFeeds}
+              showRead={this.props.showRead}
+              selectRssArticle={this.props.selectRssArticle}
+              checked={this.props.selectedRssArticles.includes(article.get('id'))}
+            />
+          )
+        }
+      })
+    }
 
     return (
       <>
