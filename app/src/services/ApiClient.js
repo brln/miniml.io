@@ -10,6 +10,7 @@ export default class ApiClient {
   headers (isJson) {
     let headers = {
       'Authorization': 'Bearer ' + this.token,
+      'Cache-Control': 'no-store',
     }
     if (isJson) {
       headers['Content-Type'] = 'application/json'

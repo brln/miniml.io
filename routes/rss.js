@@ -88,7 +88,6 @@ router.get('/feeds', endpointAuth, (req, res, next) => {
 
 router.get('/articles/:id', endpointAuth, (req, res, next) => {
   db.RssArticle.findByPk(req.params.id).then(article => {
-    // @TODO: 404 if not found
     res.json(article)
   })
 })
