@@ -73,6 +73,9 @@ export default (baseModel, DataTypes) => {
         skipDays: {
           type: DataTypes.STRING,
         },
+        specialType: {
+          type: DataTypes.STRING,
+        }
       }
     }
 

@@ -15,14 +15,16 @@ export default class RssFeeds extends PureComponent {
         </div>
 
         { this.props.rssFeeds.valueSeq().map(feed => {
-          if (!feed.getIn(['RssFeedUser', 'deletedAt'])) {
-            return (
-              <RssFeed
-                deleteFeed={this.props.deleteFeed}
-                key={feed.get('id')}
-                feed={feed}
-              />
-            )
+          if (!feed.get('specialType')) {
+            if (!feed.getIn(['RssFeedUser', 'deletedAt'])) {
+              return (
+                <RssFeed
+                  deleteFeed={this.props.deleteFeed}
+                  key={feed.get('id')}
+                  feed={feed}
+                />
+              )
+            }
           }
         })}
       </>
