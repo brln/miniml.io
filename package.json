@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "cd app && rm -rf node_modules && npm install && (PUBLIC_URL='/app' npm run build &) && cd .. && npx sequelize-cli db:migrate && node ./bin/babel.www",
+    "start": "npx sequelize-cli db:migrate && cd app && rm -rf node_modules && npm install && (PUBLIC_URL='/app' npm run build &) && cd .. && npx sequelize-cli db:migrate && node ./bin/babel.www",
     "dev": "cd app && (npm start &) && cd .. && node-dev --max-old-space-size=8192 ./bin/babel.www",
     "backend-dev": "node-dev --max-old-space-size=8192 ./bin/babel.www",
     "frontend-dev": "cd app && npm start",

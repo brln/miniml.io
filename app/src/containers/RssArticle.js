@@ -44,8 +44,9 @@ class RssArticle extends InboxItemShowPage {
             previousPage={this.previousPage}
           />
           <h2>{ this.props.article.get('title') }</h2>
+          <h3>{ this.props.rssFeeds.getIn([this.props.article.get('rssFeedID'), 'title'])}</h3>
           <h4>{ this.props.article.get('author') }</h4>
-          <div dangerouslySetInnerHTML={{ __html: this.props.article.get('content')}} />
+          <div style={{fontFamily: 'serif'}} dangerouslySetInnerHTML={{ __html: this.props.article.get('content')}} />
           <a target="_blank" rel="noopener noreferrer" href={this.props.article.get('link')}>{this.props.article.get('link')}</a>
         </MainBox>
       )
@@ -62,6 +63,7 @@ function mapStateToProps (state, passedProps) {
     articleID,
     articles: state.getIn(['localState', 'articles']),
     emails: state.getIn(['localState', 'emails']),
+    rssFeeds: state.getIn(['localState', 'rssFeeds']),
     inboxItems: state.getIn(['localState', 'inboxItems']),
     itemID: articleID,
   }
