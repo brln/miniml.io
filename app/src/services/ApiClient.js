@@ -11,7 +11,6 @@ export default class ApiClient {
   headers (isJson) {
     let headers = {
       'Authorization': 'Bearer ' + this.token,
-      'Cache-Control': 'no-store',
     }
     if (isJson) {
       headers['Content-Type'] = 'application/json'
@@ -44,6 +43,7 @@ export default class ApiClient {
       endpoint,
       {
         body,
+        cache: 'no-store',
         headers: this.headers(isJSON),
         method
       }
