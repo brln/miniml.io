@@ -186,7 +186,7 @@ const fetchArticles = (req, res, next) => {
 
   return db.User.findByPk(username).then(_user => {
     user = _user
-    return user.getRssFeeds({ where: {'$RSSFeedUser.deletedAt$': null}})
+    return user.getRssFeeds({ where: {'$RssFeedUser.deletedAt$': null}})
   }).then(_feeds => {
     const deliveryTimeUTC = moment().tz(user.deliveryTimezone).hour(user.deliveryTime).utc().hour()
     const betweenDate = helpers.between(`${deliveryTimeUTC}:00`, parseInt(req.query.offset) || 0)
