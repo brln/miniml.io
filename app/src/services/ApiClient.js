@@ -1,6 +1,7 @@
 export default class ApiClient {
 
   constructor(token){
+    this.DELETE = 'delete'
     this.GET = 'get'
     this.POST = 'post'
     this.PUT = 'put'
@@ -28,6 +29,10 @@ export default class ApiClient {
 
   put (endpoint, body) {
     return this.request(this.PUT, endpoint, body)
+  }
+
+  delete (endpoint) {
+    return this.request(this.DELETE, endpoint)
   }
 
   request (method, endpoint, body, isJSON=true) {

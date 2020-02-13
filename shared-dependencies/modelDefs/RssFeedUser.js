@@ -13,6 +13,9 @@ export default (baseModel, DataTypes) => {
           type: DataTypes.STRING,
           primaryKey: true
         },
+        deletedAt: {
+          type: DataTypes.DATE,
+        }
       }
     }
 

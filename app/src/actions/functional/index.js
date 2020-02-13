@@ -15,6 +15,7 @@ import {
   setInboxItems,
   setInboxLoading,
   setLoginError,
+  setRssFeed,
   setRssFeeds,
   setRssFeedAddError,
   setUserData,
@@ -22,6 +23,18 @@ import {
   setViewingEmail,
   tokenCheckComplete,
 } from '../../actions/standard'
+
+function deleteRssFeed (feedID) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    return apiClient.delete(`/api/rss/feeds/${feedID}`).then(deleted => {
+      dispatch(setRssFeed(deleted))
+    }).catch(e => {
+      console.log(e)
+    })
+  }
+}
 
 function getArticles (offset) {
   return (dispatch, getState) => {
@@ -270,6 +283,9 @@ function submitRssFeed (url) {
       dispatch(addRssFeed(feed))
     }).catch(e => {
       dispatch(setRssFeedAddError(e.message))
+      setTimeout(() => {
+        dispatch(setRssFeedAddError(''))
+      }, 2000)
     })
   }
 }
@@ -299,6 +315,7 @@ function tryToFetchAuthToken () {
 const functional = {
   bulkUpdateSelectedEmails,
   bulkUpdateSelectedRssArticles,
+  deleteRssFeed,
   doLogin,
   doLogout,
   doSignup,

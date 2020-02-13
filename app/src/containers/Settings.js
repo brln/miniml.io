@@ -6,6 +6,7 @@ import functional from '../actions/functional'
 import { MainBox } from "../components/Shared/MainBox"
 import TimezonePicker from '../vendor/react-timezone-picker'
 import styled from "styled-components"
+import RssFeeds from '../components/Settings/RSSFeeds'
 
 
 const SavedIndicator = styled.div`
@@ -22,6 +23,7 @@ class Settings extends PureComponent {
       newFeed: '',
       deliveryTimeSaved: false,
     }
+    this.deleteFeed = this.deleteFeed.bind(this)
     this.submitNewFeed = this.submitNewFeed.bind(this)
     this.updateDeliveryTime = this.updateDeliveryTime.bind(this)
     this.updateDeliveryTimezone = this.updateDeliveryTimezone.bind(this)
@@ -69,8 +71,18 @@ class Settings extends PureComponent {
     }, 2000)
   }
 
+  deleteFeed (id) {
+    return () => {
+      this.props.dispatch(functional.deleteRssFeed(id))
+    }
+  }
+
   submitNewFeed () {
-    this.props.dispatch(functional.submitRssFeed(this.state.newFeed))
+    this.props.dispatch(functional.submitRssFeed(this.state.newFeed)).then(() => {
+      this.setState({
+        newFeed: ''
+      })
+    })
   }
 
   hourOptions () {
@@ -90,22 +102,15 @@ class Settings extends PureComponent {
             <h1>Email</h1>
             <h3>{this.props.userData.get('username')}@miniml.io</h3>
 
-            <h1>RSS Feeds</h1>
-            { this.props.rssFeedAddError ? <div>{this.props.rssFeedAddError}</div> : null}
-            <div>Add Feed: </div>
-            <div>
-              <input type="text" value={this.state.newFeed} onChange={this.updateNewFeed}/>
-              <button onClick={this.submitNewFeed}>Add</button>
-            </div>
+            <RssFeeds
+              deleteFeed={this.deleteFeed}
+              rssFeeds={this.props.rssFeeds}
+              rssFeedAddError={this.props.rssFeedAddError}
+              newFeed={this.state.newFeed}
+              updateNewFeed={this.updateNewFeed}
+              submitNewFeed={this.submitNewFeed}
+            />
 
-            <ul>
-              { this.props.rssFeeds.valueSeq().map(feed => {
-                return <li>{feed.get('title')}: {feed.get('description')}</li>
-              })}
-            </ul>
-          </div>
-
-          <div>
             <h1>Delivery Time</h1>
             <select value={this.props.userData.get('deliveryTime')} onChange={this.updateDeliveryTime}>
               { this.hourOptions() }

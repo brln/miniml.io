@@ -23,7 +23,8 @@ router.post('/feeds', endpointAuth, (req, res, next) => {
       if (foundFeed) {
         return db.RssFeedUser.findOne({where: {rssFeedID: foundFeed.id, userID: user.username}}).then(foundUserFeed => {
           if (foundUserFeed) {
-            return Promise.resolve()
+            foundUserFeed.deletedAt = null
+            return foundUserFeed.save()
           } else {
             return user.addRssFeed(foundFeed, {through: {id: helpers.getID() }})
           }
@@ -83,6 +84,24 @@ router.get('/feeds', endpointAuth, (req, res, next) => {
   }).catch(e => {
     console.log(e)
     next(e)
+  })
+})
+
+router.delete('/feeds/:id', endpointAuth, (req, res, next) => {
+  const username = res.locals.username
+  return db.RssFeedUser.findOne({where: {userID: username, rssFeedID: req.params.id}}).then(found => {
+    if (!found) {
+      res.status(404).send({error: 'User does not have that feed'})
+    } else {
+      found.deletedAt = new Date()
+      return found.save().then(() => {
+        return db.User.findByPk(username)
+      }).then(user => {
+        return user.getRssFeeds({where: {id: req.params.id}})
+      }).then(feeds => {
+        res.json(feeds[0])
+      })
+    }
   })
 })
 
@@ -167,7 +186,7 @@ const fetchArticles = (req, res, next) => {
 
   return db.User.findByPk(username).then(_user => {
     user = _user
-    return user.getRssFeeds()
+    return user.getRssFeeds({ where: {'$RSSFeedUser.deletedAt$': null}})
   }).then(_feeds => {
     const deliveryTimeUTC = moment().tz(user.deliveryTimezone).hour(user.deliveryTime).utc().hour()
     const betweenDate = helpers.between(`${deliveryTimeUTC}:00`, parseInt(req.query.offset) || 0)

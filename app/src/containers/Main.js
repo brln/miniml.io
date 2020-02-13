@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react'
 import {connect} from "react-redux"
 import {
-  Switch,
   Redirect,
   Route,
+  Switch,
 } from "react-router"
 import { Link } from 'react-router-dom'
+import { push } from 'connected-react-router'
 
 import functional from '../actions/functional'
 import Messages from './Messages'
@@ -38,10 +39,15 @@ class Main extends PureComponent {
   constructor(props) {
     super(props)
     this.logout = this.logout.bind(this)
+    this.showSettings = this.showSettings.bind(this)
   }
 
   logout () {
     this.props.dispatch(functional.doLogout())
+  }
+
+  showSettings () {
+    this.props.dispatch(push('/settings'))
   }
 
   render () {
@@ -49,7 +55,10 @@ class Main extends PureComponent {
       <div>
         <Header>
           <Logo><StyledLink to={"/messages"}>miniml.io</StyledLink></Logo>
-          <AccountButton logout={this.logout}/>
+          <AccountButton
+            logout={this.logout}
+            showSettings={this.showSettings}
+          />
         </Header>
         <Switch>
           <Route path="/messages/articles/:id" component={RssArticle} />

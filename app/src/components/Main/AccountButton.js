@@ -17,6 +17,11 @@ const DropdownItem = styled.div`
   text-decoration: none;
   display: block;
   cursor: pointer;
+  
+  &:hover {
+    color: white;
+    background: #a5a5a5;
+  }
 `
 
 const Dropdown = styled.div`
@@ -31,11 +36,6 @@ const DropdownContent = styled.div`
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
   right: 1em;
-`
-
-const StyledLink = styled(Link)`
-    text-decoration: none;
-    color: black;
 `
 
 export default class AccountButton extends PureComponent {
@@ -82,8 +82,8 @@ export default class AccountButton extends PureComponent {
       <Dropdown onClick={this.menuOpen} ref={x => this.wrapperRef = x}>
         <Button className="disable-select">Account</Button>
         {this.state.menuOpen ? <DropdownContent onClick={this.closeMenu}>
-          <DropdownItem>
-            <StyledLink to={'/settings'}>Settings</StyledLink>
+          <DropdownItem onClick={this.props.showSettings}>
+            <div>Settings</div>
           </DropdownItem>
           <DropdownItem onClick={this.props.logout}>Log Out</DropdownItem>
         </DropdownContent> : null }

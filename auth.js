@@ -29,7 +29,6 @@ function authContext({req, res}) {
 export default function endpointAuth(req, res, next) {
   try {
     const context = authContext({req, res})
-    console.log(context)
     res.locals.username = context.username
     next()
   } catch (e) {

@@ -24,7 +24,7 @@ import {
   SET_VIEWING_ARTICLE,
   SET_VIEWING_EMAIL,
   TOGGLE_SHOW_READ,
-  TOKEN_CHECK_COMPLETE, SET_INBOX_LOADING,
+  TOKEN_CHECK_COMPLETE, SET_INBOX_LOADING, SET_RSS_FEED,
 } from '../constants/actions'
 
 export function logFunctionalAction (name, otherData) {
@@ -95,6 +95,13 @@ export function setEmails (emails) {
   return {
     type: SET_EMAILS,
     emails
+  }
+}
+
+export function setRssFeed (rssFeed) {
+  return {
+    type: SET_RSS_FEED,
+    rssFeed
   }
 }
 

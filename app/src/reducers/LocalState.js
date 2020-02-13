@@ -19,7 +19,7 @@ import {
   SET_VIEWING_ARTICLE,
   SET_VIEWING_EMAIL,
   TOGGLE_SHOW_READ,
-  TOKEN_CHECK_COMPLETE, SELECT_RSS_ARTICLE, DESELECT_RSS_ARTICLE, CLEAR_SELECTED_RSS_ARTICLES,
+  TOKEN_CHECK_COMPLETE, SELECT_RSS_ARTICLE, DESELECT_RSS_ARTICLE, CLEAR_SELECTED_RSS_ARTICLES, SET_RSS_FEED,
 } from '../constants/actions'
 
 export const initialState = fromJS({
@@ -109,16 +109,18 @@ export default function LocalStateReducer(state=initialState, action) {
       return state.set('inboxItems', fromJS(action.items))
     case SET_INBOX_LOADING:
       return state.set('inboxLoading', action.loading)
+    case SET_RSS_FEED:
+      return state.setIn(['rssFeeds', action.rssFeed.id], fromJS(action.rssFeed))
     case SET_RSS_FEEDS:
       return state.set('rssFeeds', fromJS(action.rssFeeds))
+    case SET_RSS_FEED_ADD_ERROR:
+      return state.set('rssFeedAddError', action.error)
     case SET_USER_DATA:
       return state.set('userData', fromJS(action.userData))
     case SET_VIEWING_ARTICLE:
       return state.set('viewingArticle', fromJS(action.article))
     case SET_VIEWING_EMAIL:
       return state.set('viewingEmail', fromJS(action.email))
-    case SET_RSS_FEED_ADD_ERROR:
-      return state.set('rssFeedAddError', action.error)
     case TOGGLE_SHOW_READ:
       return state.set('showRead', !state.get('showRead'))
     case TOKEN_CHECK_COMPLETE:

@@ -398,7 +398,7 @@ const TimezonePicker = ({ unselectLabel, ...props }) => {
             {timezone}
         </option>
     ))
-    zoneOptions.unshift(<option value={null}></option>)
+    zoneOptions.unshift(<option key="null" value={null}></option>)
     return (
       <select {...props}>
         {unselectLabel && <option key="unset">{unselectLabel}</option>}

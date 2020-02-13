@@ -66,6 +66,10 @@ const SignupLink = styled.div`
   padding-bottom: 2em;
 `
 
+const SignupUnderline = styled.u`
+  cursor: pointer;
+`
+
 export default class Login extends PureComponent {
   render () {
     let error
@@ -95,7 +99,7 @@ export default class Login extends PureComponent {
             />
           </div>
           <SubmitButton onClick={this.props.doLogin}>Submit</SubmitButton>
-          <SignupLink onClick={this.props.setView(SIGNUP_VIEW)}>Or, Sign Up</SignupLink>
+          <SignupLink onClick={this.props.setView(SIGNUP_VIEW)}>Or, <SignupUnderline>Sign Up</SignupUnderline></SignupLink>
         </MainBox>
       </Background>
     )

@@ -38,6 +38,9 @@ server.use('/api/account', AccountRouter)
 server.use('/api/email', EmailRouter)
 server.use('/api/rss', RssRouter)
 server.use('/api/randomShit', RandomShitRouter)
+server.use('/api/*', (req, res, next) => {
+  res.status(404).send({error: 'Not Found'})
+})
 
 server.use('*.php', (req, res) => {
   setTimeout(() => {

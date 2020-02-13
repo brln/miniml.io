@@ -34,9 +34,11 @@ export const Subject = styled.div`
   font-size: 100%;
   color: ${p => p.read ? 'grey' : 'black'};
   padding-right: 1em;
+  padding-top: 0.3em;
 `
 
 export const From = styled.div`
+  padding-top: 0.3em;
   font-size: 80%;
   color: ${p => p.read ? 'grey' : 'black'};
 `
