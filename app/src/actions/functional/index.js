@@ -275,11 +275,11 @@ function loadInbox () {
   }
 }
 
-function submitRssFeed (url) {
+function submitRssFeed (url, specialType) {
   return (dispatch, getState) => {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
-    return apiClient.post(`/api/rss/feeds`, {url}).then(feed => {
+    return apiClient.post(`/api/rss/feeds`, {url, specialType}).then(feed => {
       dispatch(addRssFeed(feed))
     }).catch(e => {
       dispatch(setRssFeedAddError(e.message))

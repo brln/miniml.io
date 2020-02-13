@@ -1,6 +1,5 @@
 import React from 'react'
-import moment from 'moment'
-import { FaRssSquare } from 'react-icons/fa'
+import { FaRedditSquare, FaRssSquare } from 'react-icons/fa'
 
 import {
   IconBox,
@@ -39,7 +38,7 @@ export default class RssArticleRow extends React.PureComponent {
             />
           </MarkReadBox>
           <IconBox>
-            <FaRssSquare />
+            { source.get('specialType') === 'reddit' ? <FaRedditSquare /> : <FaRssSquare />}
           </IconBox>
           <HeaderInfo>
             <PrettyLink

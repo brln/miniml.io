@@ -14,6 +14,7 @@ router.post('/feeds', endpointAuth, (req, res, next) => {
   const parser = new Parser()
   const username = res.locals.username
   let feedData
+  console.log('**********', req.body)
 
   parser.parseURL(req.body.url).then(_feedData => {
     feedData = _feedData
@@ -55,6 +56,7 @@ router.post('/feeds', endpointAuth, (req, res, next) => {
           textInput: feedData.textInput,
           skipHours: feedData.skipHours,
           skipDays: feedData.skipDays,
+          specialType: req.body.specialType,
         }).then(_created => {
           created = _created
           return user.addRssFeed(created, {through: {id: helpers.getID()}})

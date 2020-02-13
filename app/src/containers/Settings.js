@@ -7,6 +7,7 @@ import { MainBox } from "../components/Shared/MainBox"
 import TimezonePicker from '../vendor/react-timezone-picker'
 import styled from "styled-components"
 import RssFeeds from '../components/Settings/RSSFeeds'
+import Reddit from '../components/Settings/Reddit'
 
 
 const SavedIndicator = styled.div`
@@ -21,13 +22,16 @@ class Settings extends PureComponent {
     super(props)
     this.state = {
       newFeed: '',
+      newReddit: '',
       deliveryTimeSaved: false,
     }
     this.deleteFeed = this.deleteFeed.bind(this)
     this.submitNewFeed = this.submitNewFeed.bind(this)
+    this.submitNewReddit = this.submitNewReddit.bind(this)
     this.updateDeliveryTime = this.updateDeliveryTime.bind(this)
     this.updateDeliveryTimezone = this.updateDeliveryTimezone.bind(this)
     this.updateNewFeed = this.updateNewFeed.bind(this)
+    this.updateNewReddit = this.updateNewReddit.bind(this)
   }
 
   componentDidMount () {
@@ -38,6 +42,12 @@ class Settings extends PureComponent {
   updateNewFeed (e) {
     this.setState({
       newFeed: e.target.value
+    })
+  }
+
+  updateNewReddit (e) {
+    this.setState({
+      newReddit: e.target.value
     })
   }
 
@@ -85,6 +95,15 @@ class Settings extends PureComponent {
     })
   }
 
+  submitNewReddit () {
+    const url = `http://www.reddit.com/r/${this.state.newReddit}/.rss`
+    this.props.dispatch(functional.submitRssFeed(url, 'reddit')).then(() => {
+      this.setState({
+        newReddit: ''
+      })
+    })
+  }
+
   hourOptions () {
     let options = Array(24).fill().map((_, i) => {
       return <option value={i}>{i === 0 || i === 12 ? '12' : i % 12} {i < 12 ? 'am' : 'pm'}</option>
@@ -109,6 +128,14 @@ class Settings extends PureComponent {
               newFeed={this.state.newFeed}
               updateNewFeed={this.updateNewFeed}
               submitNewFeed={this.submitNewFeed}
+            />
+
+            <Reddit
+              deleteFeed={this.deleteFeed}
+              newReddit={this.state.newReddit}
+              rssFeeds={this.props.rssFeeds}
+              updateNewReddit={this.updateNewReddit}
+              submitNewReddit={this.submitNewReddit}
             />
 
             <h1>Delivery Time</h1>
