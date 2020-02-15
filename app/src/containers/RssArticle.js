@@ -49,7 +49,6 @@ class RssArticle extends InboxItemShowPage {
           <h3>{ this.props.rssFeeds.getIn([this.props.article.get('rssFeedID'), 'title'])}</h3>
           <h4>{ this.props.article.get('author') }</h4>
           <div style={{fontFamily: 'serif'}} dangerouslySetInnerHTML={{ __html: this.props.article.get('content')}} />
-          <a target="_blank" rel="noopener noreferrer" href={this.props.article.get('link')}>{this.props.article.get('link')}</a>
         </MainBox>
       )
     } else {

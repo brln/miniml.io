@@ -7,14 +7,19 @@ import db from '../models'
 import { helpers } from 'shared-dependencies'
 import {Op} from "sequelize"
 import { RssUpdater } from '../services'
+import bodyParser from "body-parser"
 
 const router = express.Router()
+
+router.use(bodyParser.urlencoded({
+  extended: true
+}))
+router.use(bodyParser.json())
 
 router.post('/feeds', endpointAuth, (req, res, next) => {
   const parser = new Parser()
   const username = res.locals.username
   let feedData
-  console.log('**********', req.body)
 
   parser.parseURL(req.body.url).then(_feedData => {
     feedData = _feedData

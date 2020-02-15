@@ -26,7 +26,6 @@ class DefaultParser {
         contentSnippet:  item.contentSnippet,
         comments: item.comments,
         category: item.category,
-        enclosure: item.enclosure,
       }
     }
     return articles

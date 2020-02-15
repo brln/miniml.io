@@ -1,11 +1,18 @@
 import bcrypt from 'bcryptjs'
 import express from 'express'
+import moment from 'moment'
 
 import endpointAuth from '../auth'
 import { makeToken } from '../helpers'
 import db from "../models"
+import bodyParser from "body-parser"
 
 const router = express.Router()
+
+router.use(bodyParser.urlencoded({
+  extended: true
+}))
+router.use(bodyParser.json())
 
 router.post('/signup', function(req, res, next) {
   const username = req.body.username
@@ -21,7 +28,9 @@ router.post('/signup', function(req, res, next) {
         username,
         password: hashed,
         deliveryTime: 13,
-        deliveryTimezone: 'America/Los_Angeles'
+        deliveryTimezone: 'America/Los_Angeles',
+        paid: false,
+        trialExpires: moment().add(7, 'days')
       }).then(() => {
         const authToken = makeToken(username)
         res.send({ authToken })
@@ -62,6 +71,8 @@ router.get('/user', endpointAuth, (req, res, next) => {
       username: userData.username,
       deliveryTime: userData.deliveryTime,
       deliveryTimezone: userData.deliveryTimezone,
+      trialExpires: userData.trialExpires,
+      paid: userData.paid,
     })
   })
 })

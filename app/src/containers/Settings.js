@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import {connect} from "react-redux"
+import { Link } from 'react-router-dom'
 import moment from 'moment'
 
 import functional from '../actions/functional'
@@ -8,6 +9,7 @@ import TimezonePicker from '../vendor/react-timezone-picker'
 import styled from "styled-components"
 import RssFeeds from '../components/Settings/RSSFeeds'
 import Reddit from '../components/Settings/Reddit'
+import Subscribe from '../components/Settings/Subscribe'
 
 
 const SavedIndicator = styled.div`
@@ -26,6 +28,7 @@ class Settings extends PureComponent {
       deliveryTimeSaved: false,
     }
     this.deleteFeed = this.deleteFeed.bind(this)
+    this.startSubscription = this.startSubscription.bind(this)
     this.submitNewFeed = this.submitNewFeed.bind(this)
     this.submitNewReddit = this.submitNewReddit.bind(this)
     this.updateDeliveryTime = this.updateDeliveryTime.bind(this)
@@ -112,12 +115,22 @@ class Settings extends PureComponent {
     return options
   }
 
+  startSubscription () {
+    this.props.dispatch(functional.createCheckoutSession())
+  }
+
   render () {
     return (
       <>
         { this.state.deliveryTimeSaved ? <SavedIndicator>Saved</SavedIndicator> : null }
         <MainBox>
           <div>
+
+            <Subscribe
+              startSubscription={this.startSubscription}
+              userData={this.props.userData}
+            />
+
             <h1>Email</h1>
             <h3>{this.props.userData.get('username')}@miniml.io</h3>
 

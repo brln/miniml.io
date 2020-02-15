@@ -22,7 +22,16 @@ export default (baseModel, DataTypes) => {
         },
         deliveryTimezone: {
           type: DataTypes.STRING,
-        }
+        },
+        trialExpires: {
+          type: DataTypes.DATE,
+        },
+        paid: {
+          type: DataTypes.BOOLEAN
+        },
+        subscriptionStripeSessionID: {
+          type: DataTypes.STRING
+        },
       }
     }
 

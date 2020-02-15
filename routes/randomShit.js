@@ -4,8 +4,14 @@ import faker from 'faker'
 import { helpers } from 'shared-dependencies'
 import db from '../models'
 import { configGet, ENV } from '../config'
+import bodyParser from "body-parser"
 
 const router = express.Router()
+
+router.use(bodyParser.urlencoded({
+  extended: true
+}))
+router.use(bodyParser.json())
 
 router.use(mustBeLocal)
 

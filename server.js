@@ -7,6 +7,7 @@ import path from 'path'
 import {
   AccountRouter,
   EmailRouter,
+  PaymentsRouter,
   RandomShitRouter,
   RssRouter,
 } from './routes'
@@ -21,21 +22,14 @@ server.use(express.static('views'))
 server.use('/app/static', express.static('app/build/static'))
 
 server.use(logger(configGet(LOGGING_TYPE)))
-server.use(express.json())
-server.use(express.urlencoded({ extended: false }))
 server.use(cookieParser())
-
-// configure the app to use bodyParser()
-server.use(bodyParser.urlencoded({
-    extended: true
-}))
-server.use(bodyParser.json())
 
 const sqsService = SqsService.factory()
 sqsService.receiveMessages()
 
 server.use('/api/account', AccountRouter)
 server.use('/api/email', EmailRouter)
+server.use('/api/payments', PaymentsRouter)
 server.use('/api/rss', RssRouter)
 server.use('/api/randomShit', RandomShitRouter)
 server.use('/api/*', (req, res, next) => {

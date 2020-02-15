@@ -24,6 +24,24 @@ import {
   tokenCheckComplete,
 } from '../../actions/standard'
 
+function createCheckoutSession () {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    apiClient.post(`/api/payments`).then(resp => {
+      const sessionId = resp.sessionID
+      console.log('key', process.env.REACT_APP_STRIPE_PUBLIC_KEY)
+      const stripe = window.Stripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY) // @TODO this has to be confirable for production
+      return stripe.redirectToCheckout({ sessionId })
+    }).then(result => {
+      console.log(result)
+      if (result.error) {
+        alert(result.error.message)
+      }
+    })
+  }
+}
+
 function deleteRssFeed (feedID) {
   return (dispatch, getState) => {
     const token = getState().getIn(['localState', 'authToken'])
@@ -315,6 +333,7 @@ function tryToFetchAuthToken () {
 const functional = {
   bulkUpdateSelectedEmails,
   bulkUpdateSelectedRssArticles,
+  createCheckoutSession,
   deleteRssFeed,
   doLogin,
   doLogout,

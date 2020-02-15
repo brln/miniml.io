@@ -3,8 +3,14 @@ import endpointAuth from '../auth'
 import db from '../models'
 import { Op } from 'sequelize'
 import { helpers } from 'shared-dependencies'
+import bodyParser from "body-parser"
 
 const router = express.Router()
+
+router.use(bodyParser.urlencoded({
+  extended: true
+}))
+router.use(bodyParser.json())
 
 
 router.get('/', endpointAuth, (req, res, next) => {
