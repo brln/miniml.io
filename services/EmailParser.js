@@ -14,7 +14,7 @@ export default class EmailParser {
             id: message.MessageId,
             fromAddress: parsed.from.value[0].address,
             fromName: parsed.from.value[0].name,
-            replyToAddress:  parsed.replyTo.value[0].address,
+            replyToAddress:  parsed.replyTo ? parsed.replyTo.value[0].address : null,
             toAddress: parsed.to.value[0].address,
             subject: parsed.subject,
             bodyHTML: parsed.html,

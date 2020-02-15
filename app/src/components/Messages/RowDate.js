@@ -3,7 +3,7 @@ import moment from "moment"
 
 const RowDate = (props) => {
   const rowDate = moment(props.date)
-  if (rowDate.add(24, 'hours') > moment()) {
+  if (rowDate.day() === moment().day()) {
     return <span>{rowDate.format('h:mm a')}</span>
   } else {
     return (

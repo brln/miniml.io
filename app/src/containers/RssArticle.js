@@ -43,7 +43,9 @@ class RssArticle extends InboxItemShowPage {
             nextPage={this.nextPage}
             previousPage={this.previousPage}
           />
-          <h2>{ this.props.article.get('title') }</h2>
+          <h2>
+            <a style={{color: 'black'}} target="_blank" rel="noopener noreferrer" href={this.props.article.get('link')}>{ this.props.article.get('title') }</a>
+          </h2>
           <h3>{ this.props.rssFeeds.getIn([this.props.article.get('rssFeedID'), 'title'])}</h3>
           <h4>{ this.props.article.get('author') }</h4>
           <div style={{fontFamily: 'serif'}} dangerouslySetInnerHTML={{ __html: this.props.article.get('content')}} />
