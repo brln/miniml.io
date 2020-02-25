@@ -32,6 +32,21 @@ export default (baseModel, DataTypes) => {
         subscriptionStripeSessionID: {
           type: DataTypes.STRING
         },
+        twitterTempToken: {
+          type: DataTypes.STRING
+        },
+        twitterOauthToken: {
+          type: DataTypes.STRING
+        },
+        twitterOauthTokenSecret: {
+          type: DataTypes.STRING
+        },
+        twitterUserID: {
+          type: DataTypes.STRING
+        },
+        twitterScreenName: {
+          type: DataTypes.STRING
+        }
       }
     }
 
@@ -39,6 +54,7 @@ export default (baseModel, DataTypes) => {
       this.emails = this.hasMany(models.Email, { foreignKey: 'userID' })
       this.rssFeeds = this.belongsToMany(models.RssFeed, {through: models.RssFeedUser, foreignKey: 'userID', otherKey: 'rssFeedID'})
       this.rssArticleUsers = this.hasMany(models.RssArticleUser, { foreignKey: 'userID'})
+      this.tweets = this.belongsToMany(models.Tweet, {through: models.UserTweet, foreignKey: 'userID', otherKey: 'tweetID'})
     }
   }
   return User

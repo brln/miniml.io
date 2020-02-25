@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from "react-redux"
 import styled from "styled-components"
 import functional from '../actions/functional'
-import { setViewingEmail} from '../actions/standard'
+import { setViewingItem } from '../actions/standard'
 import { MainBox } from '../components/Shared/MainBox'
 
 import InboxItemShowPage from "./InboxItemShowPage"
@@ -25,7 +25,7 @@ class Email extends InboxItemShowPage {
 
   static getDerivedStateFromProps (props, state) {
     if (props.email && props.email.get('id') !== props.emailID) {
-      props.dispatch(setViewingEmail(props.emails.get(props.emailID)))
+      props.dispatch(setViewingItem(props.emails.get(props.emailID)))
     }
   }
 
@@ -35,7 +35,7 @@ class Email extends InboxItemShowPage {
         this.props.dispatch(functional.toggleEmailRead(this.props.emailID))
       })
     } else if (this.props.email.get('id') !== this.props.emailID) {
-      this.props.dispatch(setViewingEmail(this.props.emails.get(this.props.emailID)))
+      this.props.dispatch(setViewingItem(this.props.emails.get(this.props.emailID)))
     }
   }
 
@@ -78,12 +78,13 @@ class Email extends InboxItemShowPage {
 function mapStateToProps (state, passedProps) {
   const emailID = passedProps.match.params.id
   return {
-    email: state.getIn(['localState', 'viewingEmail']),
+    email: state.getIn(['localState', 'viewingItem']),
     emailID,
     articles: state.getIn(['localState', 'articles']),
     emails: state.getIn(['localState', 'emails']),
     inboxItems: state.getIn(['localState', 'inboxItems']),
     itemID: emailID,
+    tweets: state.getIn(['localState', 'tweets'])
   }
 }
 

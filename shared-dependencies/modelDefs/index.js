@@ -4,7 +4,10 @@ import RssArticle from './RssArticle'
 import RssArticleUser from './RssArticleUser'
 import RssFeed from './RssFeed'
 import RssFeedUser from './RssFeedUser'
+import Tweet from './Tweet'
+import TwitterUser from './TwitterUser'
 import User from './User'
+import UserTweet from './UserTweet'
 
 export default {
   Email,
@@ -13,5 +16,8 @@ export default {
   RssArticleUser,
   RssFeed,
   RssFeedUser,
+  Tweet,
+  TwitterUser,
   User,
+  UserTweet,
 }

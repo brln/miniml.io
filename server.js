@@ -10,11 +10,19 @@ import {
   PaymentsRouter,
   RandomShitRouter,
   RssRouter,
+  TwitterRouter,
 } from './routes'
 import { configGet, ENV, LOGGING_TYPE } from './config'
-import { SqsService, RssUpdater } from "./services"
+import {
+  CronService,
+  SqsService,
+  RssUpdater ,
+  TwitterService,
+} from "./services"
 
-RssUpdater.startCron(RssUpdater.rssFullUpdate)
+CronService.startCron(RssUpdater.rssFullUpdate, 15)
+CronService.startCron(TwitterService.twitterFullUpdate, 5)
+
 
 const server = express()
 
@@ -32,6 +40,7 @@ server.use('/api/email', EmailRouter)
 server.use('/api/payments', PaymentsRouter)
 server.use('/api/rss', RssRouter)
 server.use('/api/randomShit', RandomShitRouter)
+server.use('/api/twitter', TwitterRouter)
 server.use('/api/*', (req, res, next) => {
   res.status(404).send({error: 'Not Found'})
 })

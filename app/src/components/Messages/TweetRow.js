@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import { FaEnvelope } from 'react-icons/fa'
+import { FaTwitterSquare } from 'react-icons/fa'
 
 import {
   MarkReadBox,
@@ -13,43 +13,45 @@ import {
   DateBox,
 } from './StyledComponents'
 import RowDate from './RowDate'
-import {EMAILS} from "../../constants/magicStrings"
+import {TWEETS} from "../../constants/magicStrings"
 
-export default class EmailRow extends React.PureComponent {
+export default class TweetRow extends React.PureComponent {
   constructor(props) {
     super(props)
     this.onLinkClick = this.onLinkClick.bind(this)
   }
 
   onLinkClick () {
-    this.props.openItem('email', this.props.email.get('id'))
+    this.props.openItem('tweet', this.props.tweet.get('id'))
   }
 
   render () {
-    if (this.props.showRead || !this.props.email.get('read')) {
+    const read = this.props.tweet.getIn(['UserTweet', 'read'])
+    console.log('***', read)
+    if (this.props.showRead || !read) {
       return (
         <Row>
           <MarkReadBox>
             <input
               type="checkbox"
-              onChange={this.props.selectItem(EMAILS, this.props.email.get('id'))}
+              onChange={this.props.selectItem(TWEETS, this.props.tweet.get('id'))}
               checked={this.props.checked}
             />
           </MarkReadBox>
           <IconBox>
-            <FaEnvelope />
+            <FaTwitterSquare />
           </IconBox>
           <HeaderInfo>
             <PrettyLink
               onClick={this.onLinkClick}
               style={{color: 'black'}}
             >
-              <Subject read={this.props.email.get('read')}>{ this.props.email.get('subject') }</Subject>
-              <From read={this.props.email.get('read')}>{ this.props.email.get('fromAddress')}</From>
+              <Subject read={read}>{ this.props.tweet.get('text') }</Subject>
+              <From read={read}>{ this.props.tweet.getIn(['TwitterUser', 'name'])}</From>
             </PrettyLink>
           </HeaderInfo>
           <DateBox>
-            <RowDate date={this.props.email.get('date')} />
+            <RowDate date={this.props.tweet.get('createdAt')} />
           </DateBox>
         </Row>
       )

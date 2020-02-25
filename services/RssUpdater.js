@@ -1,5 +1,3 @@
-import cron from 'node-cron'
-import {configGet, IS_LEADER} from "../config"
 import Parser from "rss-parser"
 import {helpers} from "shared-dependencies"
 import db from "../models"
@@ -70,13 +68,6 @@ class ParserPicker {
 }
 
 export default class RssUpdater {
-  static startCron(toRun) {
-    if (configGet(IS_LEADER)) {
-      const everyFiveMinutes = '*/15 * * * *'
-      cron.schedule(everyFiveMinutes, toRun, {})
-    }
-  }
-
   static checkIfExistsAndSaveNewArticles (articles) {
     const guids = Object.keys(articles)
     return db.RssArticle.findAll({where: {guid: guids}}).then(findResult => {

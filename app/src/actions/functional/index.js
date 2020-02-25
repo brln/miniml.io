@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable'
+import { fromJS, List } from 'immutable'
 import { push } from 'connected-react-router'
 
 import {
@@ -18,11 +18,29 @@ import {
   setRssFeed,
   setRssFeeds,
   setRssFeedAddError,
+  setTweets,
   setUserData,
-  setViewingArticle,
-  setViewingEmail,
+  setViewingItem,
   tokenCheckComplete,
 } from '../../actions/standard'
+import {EMAILS, RSS_ARTICLES, TWEETS} from "../../constants/magicStrings"
+
+function byID (items) {
+  return items.reduce((accum, item) => {
+    accum[item.id] = item
+    return accum
+  }, {})
+}
+
+function connectToTwitter () {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    apiClient.get('/api/twitter/startOauth').then(resp => {
+      window.location = `https://api.twitter.com/oauth/authorize?oauth_token=${resp.token}`
+    })
+  }
+}
 
 function createCheckoutSession () {
   return (dispatch, getState) => {
@@ -31,7 +49,7 @@ function createCheckoutSession () {
     apiClient.post(`/api/payments`).then(resp => {
       const sessionId = resp.sessionID
       console.log('key', process.env.REACT_APP_STRIPE_PUBLIC_KEY)
-      const stripe = window.Stripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY) // @TODO this has to be confirable for production
+      const stripe = window.Stripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY)
       return stripe.redirectToCheckout({ sessionId })
     }).then(result => {
       console.log(result)
@@ -59,11 +77,7 @@ function getArticles (offset) {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
     return apiClient.get(`/api/rss/articles?offset=${offset}`).then(articles => {
-      const byID = articles.reduce((accum, article) => {
-        accum[article.id] = article
-        return accum
-      }, {})
-      dispatch(setArticles(byID))
+      dispatch(setArticles(byID(articles)))
     })
   }
 }
@@ -108,11 +122,27 @@ function getEmails (offset) {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
     return apiClient.get(`/api/email?offset=${offset}`).then(emails => {
-      const byID = emails.reduce((accum, email) => {
-        accum[email.id] = email
-        return accum
-      }, {})
-      dispatch(setEmails(byID))
+      dispatch(setEmails(byID(emails)))
+    })
+  }
+}
+
+function getTweets (offset) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    return apiClient.get(`/api/twitter?offset=${offset}`).then(tweets => {
+      dispatch(setTweets(byID(tweets)))
+    })
+  }
+}
+
+function getTweet (id) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const apiClient = new ApiClient(token)
+    return apiClient.get(`/api/tweet/${id}`).then(tweet => {
+      dispatch(setViewingItem(tweet))
     })
   }
 }
@@ -122,7 +152,7 @@ function getEmail (id) {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
     return apiClient.get(`/api/email/${id}`).then(email => {
-      dispatch(setViewingEmail(email))
+      dispatch(setViewingItem(email))
     })
   }
 }
@@ -132,11 +162,7 @@ function getRssFeeds () {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
     return apiClient.get(`/api/rss/feeds`).then(rssFeeds => {
-      const byID = rssFeeds.reduce((accum, feed) => {
-        accum[feed.id] = feed
-        return accum
-      }, {})
-      dispatch(setRssFeeds(byID))
+      dispatch(setRssFeeds(byID(rssFeeds)))
     })
   }
 }
@@ -146,7 +172,7 @@ function getRssArticle (id) {
     const token = getState().getIn(['localState', 'authToken'])
     const apiClient = new ApiClient(token)
     return apiClient.get(`/api/rss/articles/${id}`).then(article => {
-      dispatch(setViewingArticle(article))
+      dispatch(setViewingItem(article))
     })
   }
 }
@@ -165,14 +191,19 @@ function openInboxItem (type, id) {
   return (dispatch, getState) => {
     if (type === 'rssArticle') {
       const article = getState().getIn(['localState', 'articles', id])
-      dispatch(setViewingArticle(article))
+      dispatch(setViewingItem(article))
       dispatch(toggleRssArticleRead(id))
       dispatch(push(`/messages/articles/${id}`))
     } else if (type ==='email') {
       const email = getState().getIn(['localState', 'emails', id])
-      dispatch(setViewingEmail(email))
+      dispatch(setViewingItem(email))
       dispatch(toggleEmailRead(id))
       dispatch(push(`/messages/emails/${id}`))
+    } else if (type === 'tweet') {
+      const tweet = getState().getIn(['localState', 'tweets', id])
+      dispatch(setViewingItem(tweet))
+      dispatch(toggleTweetRead(id))
+      dispatch(push(`/messages/tweets/${id}`))
     }
   }
 }
@@ -186,6 +217,19 @@ function toggleEmailRead (id) {
       const currentEmails = getState().getIn(['localState', 'emails'])
       const newEmails = currentEmails.set(email.id, fromJS(email))
       dispatch(setEmails(newEmails))
+    })
+  }
+}
+
+function toggleTweetRead (id) {
+  return (dispatch, getState) => {
+    const token = getState().getIn(['localState', 'authToken'])
+    const newValue = !getState().getIn(['localState', 'tweets', id, 'read'])
+    const apiClient = new ApiClient(token)
+    apiClient.post(`/api/twitter/${id}`, {read: newValue}).then(tweet => {
+      const currentTweets = getState().getIn(['localState', 'tweets'])
+      const newTweets = currentTweets.set(tweet.id, fromJS(tweet))
+      dispatch(setTweets(newTweets))
     })
   }
 }
@@ -205,16 +249,12 @@ function toggleRssArticleRead (id) {
 
 function bulkUpdateSelectedEmails (newValues, offset=0) {
   return (dispatch, getState) => {
-    const emailIDs = getState().getIn(['localState', 'selectedEmails'])
+    const emailIDs = getState().getIn(['localState', 'selectedItems', EMAILS]) || List()
     if (emailIDs.count() > 0) {
       const token = getState().getIn(['localState', 'authToken'])
       const apiClient = new ApiClient(token)
       return apiClient.post(`/api/email`, {ids: emailIDs, updates: newValues, offset}).then(emails => {
-        const byID = emails.reduce((accum, email) => {
-          accum[email.id] = email
-          return accum
-        }, {})
-        dispatch(setEmails(byID))
+        dispatch(setEmails(byID(emails)))
       })
     } else {
       return Promise.resolve()
@@ -224,16 +264,27 @@ function bulkUpdateSelectedEmails (newValues, offset=0) {
 
 function bulkUpdateSelectedRssArticles (newValues, offset=0) {
   return (dispatch, getState) => {
-    const articleIDs = getState().getIn(['localState', 'selectedRssArticles'])
+    const articleIDs = getState().getIn(['localState', 'selectedItems', RSS_ARTICLES]) || List()
     if (articleIDs.count() > 0) {
       const token = getState().getIn(['localState', 'authToken'])
       const apiClient = new ApiClient(token)
       return apiClient.post(`/api/rss/articles`, {ids: articleIDs, updates: newValues, offset}).then(articles => {
-        const byID = articles.reduce((accum, article) => {
-          accum[article.id] = article
-          return accum
-        }, {})
-        dispatch(setArticles(byID))
+        dispatch(setArticles(byID(articles)))
+      })
+    } else {
+      return Promise.resolve()
+    }
+  }
+}
+
+function bulkUpdateSelectedTweets (newValues, offset=0) {
+  return (dispatch, getState) => {
+    const tweetIDs = getState().getIn(['localState', 'selectedItems', TWEETS]) || List()
+    if (tweetIDs.count() > 0) {
+      const token = getState().getIn(['localState', 'authToken'])
+      const apiClient = new ApiClient(token)
+      return apiClient.post(`/api/twitter`, {ids: tweetIDs, updates: newValues, offset}).then(tweets => {
+        dispatch(setTweets(byID(tweets)))
       })
     } else {
       return Promise.resolve()
@@ -265,7 +316,8 @@ function loadInbox () {
     const loadCalls = [
       dispatch(functional.getEmails(emailPage)),
       dispatch(functional.getRssFeeds()),
-      dispatch(functional.getArticles(emailPage))
+      dispatch(functional.getArticles(emailPage)),
+      dispatch(functional.getTweets(emailPage)),
     ]
     return Promise.all(loadCalls).then(() => {
       const articles = getState().getIn(['localState', 'articles']).valueSeq().map(article => {
@@ -284,7 +336,15 @@ function loadInbox () {
         }
       })
 
-      const listItems = [...articles, ...emails].sort((a, b) => {
+      const tweets = getState().getIn(['localState', 'tweets']).valueSeq().map(tweet => {
+        return {
+          type: 'tweet',
+          date: tweet.get('createdAt'),
+          id: tweet.get('id'),
+        }
+      })
+
+      const listItems = [...articles, ...emails, ...tweets].sort((a, b) => {
         return new Date(b.date) - new Date(a.date)
       })
       dispatch(setInboxItems(listItems))
@@ -333,6 +393,8 @@ function tryToFetchAuthToken () {
 const functional = {
   bulkUpdateSelectedEmails,
   bulkUpdateSelectedRssArticles,
+  bulkUpdateSelectedTweets,
+  connectToTwitter,
   createCheckoutSession,
   deleteRssFeed,
   doLogin,
@@ -341,8 +403,10 @@ const functional = {
   getArticles,
   getEmail,
   getEmails,
+  getTweet,
   getRssArticle,
   getRssFeeds,
+  getTweets,
   getUserData,
   loadInbox,
   onBoot,
@@ -350,6 +414,7 @@ const functional = {
   submitRssFeed,
   toggleEmailRead,
   toggleRssArticleRead,
+  toggleTweetRead,
   tryToFetchAuthToken,
   updateUserData,
 }

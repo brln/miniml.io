@@ -7,14 +7,15 @@ import {
 } from "react-router"
 import { Link } from 'react-router-dom'
 import { push } from 'connected-react-router'
+import styled from "styled-components"
 
 import functional from '../actions/functional'
 import Messages from './Messages'
 import Settings from './Settings'
 import Email from './Email'
-import styled from "styled-components"
 import AccountButton from "../components/Main/AccountButton"
 import RssArticle from './RssArticle'
+import Tweet from './Tweet'
 
 const Header = styled.div`
   border: 1px solid black;
@@ -63,6 +64,7 @@ class Main extends PureComponent {
         <Switch>
           <Route path="/messages/articles/:id" component={RssArticle} />
           <Route path="/messages/emails/:id" component={Email} />
+          <Route path="/messages/tweets/:id" component={Tweet} />
           <Route path="/messages" component={Messages} />
           <Route path="/settings" component={Settings} />
 

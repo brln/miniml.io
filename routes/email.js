@@ -4,6 +4,7 @@ import db from '../models'
 import { Op } from 'sequelize'
 import { helpers } from 'shared-dependencies'
 import bodyParser from "body-parser"
+import moment from "moment-timezone"
 
 const router = express.Router()
 
@@ -15,17 +16,19 @@ router.use(bodyParser.json())
 
 router.get('/', endpointAuth, (req, res, next) => {
   const username = res.locals.username
-  const date = helpers.between('8:59', parseInt(req.query.offset) || 0)
-
-  db.Email.findAll({
-    where: {
-      userID: username,
-      archived: false,
-      date: {
-        [Op.between]: [date.yesterday, date.today]
-      }
-    },
-    order: [['date', 'DESC']]
+  db.User.findByPk(username).then(user => {
+    const deliveryTimeUTC = moment().tz(user.deliveryTimezone).hour(user.deliveryTime).utc().hour()
+    const date = helpers.between(`${deliveryTimeUTC}:00`, parseInt(req.query.offset) || 0)
+    return db.Email.findAll({
+      where: {
+        userID: username,
+        archived: false,
+        date: {
+          [Op.between]: [date.yesterday, date.today]
+        }
+      },
+      order: [['date', 'DESC']]
+    })
   }).then(emails => {
     res.json(emails)
   }).catch(next)

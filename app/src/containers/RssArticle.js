@@ -5,7 +5,7 @@ import { MainBox } from '../components/Shared/MainBox'
 
 import InboxItemShowPage from "./InboxItemShowPage"
 import InboxItemPaginator from "../components/Shared/InboxItemPaginator"
-import { setViewingArticle } from "../actions/standard"
+import { setViewingItem } from "../actions/standard"
 
 
 class RssArticle extends InboxItemShowPage {
@@ -21,7 +21,7 @@ class RssArticle extends InboxItemShowPage {
 
   static getDerivedStateFromProps (props, state) {
     if (props.article && props.article.get('id') !== props.articleID) {
-      props.dispatch(setViewingArticle(props.articles.get(props.articleID)))
+      props.dispatch(setViewingItem(props.articles.get(props.articleID)))
     }
   }
 
@@ -60,13 +60,14 @@ class RssArticle extends InboxItemShowPage {
 function mapStateToProps (state, passedProps) {
   const articleID = passedProps.match.params.id
   return {
-    article: state.getIn(['localState', 'viewingArticle']),
+    article: state.getIn(['localState', 'viewingItem']),
     articleID,
     articles: state.getIn(['localState', 'articles']),
     emails: state.getIn(['localState', 'emails']),
     rssFeeds: state.getIn(['localState', 'rssFeeds']),
     inboxItems: state.getIn(['localState', 'inboxItems']),
     itemID: articleID,
+    tweets: state.getIn(['localState', 'tweets'])
   }
 }
 

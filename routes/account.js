@@ -73,6 +73,7 @@ router.get('/user', endpointAuth, (req, res, next) => {
       deliveryTimezone: userData.deliveryTimezone,
       trialExpires: userData.trialExpires,
       paid: userData.paid,
+      twitterScreenName: userData.twitterScreenName,
     })
   })
 })

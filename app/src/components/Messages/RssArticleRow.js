@@ -12,6 +12,7 @@ import {
   From,
 } from './StyledComponents'
 import RowDate from './RowDate'
+import { RSS_ARTICLES } from "../../constants/magicStrings"
 
 export default class RssArticleRow extends React.PureComponent {
   constructor(props) {
@@ -33,7 +34,7 @@ export default class RssArticleRow extends React.PureComponent {
           <MarkReadBox>
             <input
               type="checkbox"
-              onChange={this.props.selectRssArticle(this.props.article.get('id'))}
+              onChange={this.props.selectItem(RSS_ARTICLES, this.props.article.get('id'))}
               checked={this.props.checked}
             />
           </MarkReadBox>

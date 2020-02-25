@@ -1,9 +1,12 @@
+import { List } from 'immutable'
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 
 import EmailRow from './EmailRow'
 import RssArticleRow from './RssArticleRow'
+import TweetRow from './TweetRow'
+import {EMAILS, RSS_ARTICLES, TWEETS} from "../../constants/magicStrings"
 
 const Paginator = styled.div`
   display: flex;
@@ -94,9 +97,9 @@ export default class MessageListing extends React.PureComponent {
               key={email.get('id')}
               email={email}
               openItem={this.props.openItem}
-              selectEmail={this.props.selectEmail}
               showRead={this.props.showRead}
-              checked={this.props.selectedEmails.includes(email.get('id'))}
+              checked={(this.props.selectedItems.get(EMAILS) || List()).includes(email.get('id'))}
+              selectItem={this.props.selectItem}
             />
           )
         }  else if (item.get('type') === 'rssArticle') {
@@ -108,8 +111,20 @@ export default class MessageListing extends React.PureComponent {
               openItem={this.props.openItem}
               rssFeeds={this.props.rssFeeds}
               showRead={this.props.showRead}
-              selectRssArticle={this.props.selectRssArticle}
-              checked={this.props.selectedRssArticles.includes(article.get('id'))}
+              checked={(this.props.selectedItems.get(RSS_ARTICLES) || List()).includes(article.get('id'))}
+              selectItem={this.props.selectItem}
+            />
+          )
+        } else if (item.get('type') === 'tweet') {
+          const tweet = this.props.tweets.get(item.get('id'))
+          return (
+            <TweetRow
+              key={tweet.get('id')}
+              tweet={tweet}
+              openItem={this.props.openItem}
+              checked={(this.props.selectedItems.get(TWEETS) || List()).includes(tweet.get('id'))}
+              selectItem={this.props.selectItem}
+              showRead={this.props.showRead}
             />
           )
         }
@@ -123,7 +138,7 @@ export default class MessageListing extends React.PureComponent {
             <Button
               className="disable-select"
               onClick={this.props.toggleSelectAll}
-              enabled={this.props.selectAllEmailsChecked}
+              enabled={this.props.selectAllChecked}
             >
               <>All</>
             </Button>

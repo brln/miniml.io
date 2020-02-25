@@ -27,6 +27,7 @@ class Settings extends PureComponent {
       newReddit: '',
       deliveryTimeSaved: false,
     }
+    this.connectToTwitter = this.connectToTwitter.bind(this)
     this.deleteFeed = this.deleteFeed.bind(this)
     this.startSubscription = this.startSubscription.bind(this)
     this.submitNewFeed = this.submitNewFeed.bind(this)
@@ -119,12 +120,22 @@ class Settings extends PureComponent {
     this.props.dispatch(functional.createCheckoutSession())
   }
 
+  connectToTwitter () {
+    this.props.dispatch(functional.connectToTwitter())
+  }
+
   render () {
     return (
       <>
         { this.state.deliveryTimeSaved ? <SavedIndicator>Saved</SavedIndicator> : null }
         <MainBox>
           <div>
+
+            {
+              this.props.userData.get('twitterScreenName')
+              ? this.props.userData.get('twitterScreenName')
+              : <button onClick={this.connectToTwitter}>Twitter</button>
+            }
 
             <Subscribe
               startSubscription={this.startSubscription}

@@ -152,7 +152,6 @@ router.post('/articles', endpointAuth, (req, res, next) => {
   })
 })
 
-// @TODO: factor endpoint auth out of each endpoint and apply to all routes
 router.post('/articles/:id', endpointAuth, (req, res, next) => {
   const username = res.locals.username
   // This is not a general purpose updater because 'read' is stored on RssArticleUser

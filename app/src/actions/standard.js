@@ -1,13 +1,8 @@
 import {
   ADD_RSS_FEED,
-  CLEAR_SELECTED_EMAILS,
-  CLEAR_SELECTED_RSS_ARTICLES,
-  DESELECT_EMAIL,
-  DESELECT_RSS_ARTICLE,
+  CLEAR_SELECTED,
   LOG_FUNCTIONAL_ACTION,
   LOGOUT,
-  SELECT_EMAIL,
-  SELECT_RSS_ARTICLE,
   SET_AUTH_TOKEN,
   SET_ARTICLES,
   SET_EMAILS,
@@ -19,12 +14,14 @@ import {
   SET_RSS_FEED_ADD_ERROR,
   SET_SIGNUP_LOGIN_VIEW,
   SET_SIGNUP_PASSWORD,
+  SET_TWEETS,
   SET_USERNAME,
   SET_USER_DATA,
-  SET_VIEWING_ARTICLE,
-  SET_VIEWING_EMAIL,
   TOGGLE_SHOW_READ,
-  TOKEN_CHECK_COMPLETE, SET_INBOX_LOADING, SET_RSS_FEED,
+  TOKEN_CHECK_COMPLETE,
+  SET_INBOX_LOADING,
+  SET_RSS_FEED,
+  SET_VIEWING_ITEM, SELECT_ITEM, DESELECT_ITEM,
 } from '../constants/actions'
 
 export function logFunctionalAction (name, otherData) {
@@ -44,43 +41,17 @@ export function addRssFeed (data) {
   }
 }
 
-export function clearSelectedEmails () {
+export function clearSelected () {
   return {
-    type: CLEAR_SELECTED_EMAILS
+    type: CLEAR_SELECTED
   }
 }
 
-export function clearSelectedRssArticles () {
+export function deselectItem (itemType, ids) {
   return {
-    type: CLEAR_SELECTED_RSS_ARTICLES
-  }
-}
-
-export function deselectEmails (ids) {
-  return {
-    type: DESELECT_EMAIL,
+    type: DESELECT_ITEM,
+    itemType,
     ids,
-  }
-}
-
-export function selectEmails (ids) {
-  return {
-    type: SELECT_EMAIL,
-    ids
-  }
-}
-
-export function selectRssArticle (ids) {
-  return {
-    type: SELECT_RSS_ARTICLE,
-    ids
-  }
-}
-
-export function deselectRssArticle (ids) {
-  return {
-    type: DESELECT_RSS_ARTICLE,
-    ids
   }
 }
 
@@ -129,6 +100,14 @@ export function setAuthToken (authToken) {
 export function logOut () {
   return {
     type: LOGOUT,
+  }
+}
+
+export function selectItem (itemType, ids) {
+  return {
+    type: SELECT_ITEM,
+    itemType,
+    ids,
   }
 }
 
@@ -190,6 +169,13 @@ export function setSignupPassword (value, whichOne) {
   }
 }
 
+export function setTweets (tweets) {
+  return {
+    type: SET_TWEETS,
+    tweets,
+  }
+}
+
 export function setUserData (userData) {
   return {
     type: SET_USER_DATA,
@@ -209,16 +195,9 @@ export function toggleShowRead () {
   }
 }
 
-export function setViewingArticle (article) {
+export function setViewingItem (item) {
   return {
-    type: SET_VIEWING_ARTICLE,
-    article
-  }
-}
-
-export function setViewingEmail (email) {
-  return {
-    type: SET_VIEWING_EMAIL,
-    email
+    type: SET_VIEWING_ITEM,
+    item
   }
 }
